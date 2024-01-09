@@ -7,7 +7,7 @@
     <q-col cols="9">
       <div v-for="hour in hours" :key="hour">
         <q-card v-for="appointment in appointments.filter(a => a.hour === hour)" :key="appointment.id"
-          class="my-card bg-secondary text-white">
+          class="my-card bg-secondary text-white" >
 
           <q-card-section class="appointment">
             {{ appointment.title }}

@@ -16,6 +16,10 @@ const routes: RouteRecordRaw[] = [
       {
         path: '/mon-espace',
         component: () => import('pages/MonEspace.vue')
+      },
+      {
+        path: '/se-connecter',
+        component: () => import('pages/Authentification.vue')
       }]
   },
 

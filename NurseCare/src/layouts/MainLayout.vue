@@ -6,8 +6,8 @@
         <q-toolbar-title>
           NurseCare
         </q-toolbar-title>
-
-        <div> Aide </div>
+        <q-btn flat icon-right="account_circle" label="Se connecter" class="absolute-right" to="/se-connecter"/>
+        <!-- <div><text-h6><a text-center class="btn-connexion" href="{{ path('app_login')}}" role="button">Se connecter</a></text-h6></div> -->
       </q-toolbar>
     </q-header>
 
