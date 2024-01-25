@@ -40,7 +40,7 @@ export default defineComponent({
   name: 'PageAuthentification',
   components: {
     ConnexionComponent,
-    CreerUtilisateurComponent // Enregistrement du composant ici
+    CreerUtilisateurComponent
   },
   setup () {
     const tab = ref('connexion')

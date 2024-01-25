@@ -29,7 +29,6 @@ import { validateEmail, validatePassword } from 'src/helpers/InputHelper'
 import { QInput, useQuasar } from 'quasar' // Si vous avez les types Quasar installés
 import { useRouter } from 'vue-router'
 import { api } from 'boot/axios'
-
 export default defineComponent({
   name: 'ConnexionComponent',
   setup () {
@@ -60,7 +59,6 @@ export default defineComponent({
           password: formData.value.password
         })
         console.log('Login successful:', response.data)
-
         localStorage.setItem('userToken', response.data.token)
 
         // Mise à jour de l'état de l'UI ou redirection

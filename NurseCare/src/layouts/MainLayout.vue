@@ -1,17 +1,19 @@
 <template>
   <q-layout view="hHh Lpr fFf">
-    <q-header elevated>
+    <q-header elevated v-if="shouldShowHeader" >
       <q-toolbar>
         <!-- <q-btn class="btn-menu" flat dense round icon="menu" aria-label="Menu" @click="leftDrawerOpen = !leftDrawerOpen"/> -->
-        <q-toolbar-title>
-          NurseCare
-        </q-toolbar-title>
-        <q-btn flat icon-right="account_circle" label="Se connecter" class="absolute-right" to="/se-connecter"/>
+        <router-link to="/" style="color: inherit; font-size: inherit; font-weight: inherit; text-decoration: none;">
+          <q-toolbar-title>
+            NurseCare
+          </q-toolbar-title>
+        </router-link>
+        <q-btn v-if="isAuthenticated" flat icon-right="account_circle" label="" class="absolute-right" @click="logout" to="/se-connecter" />
         <!-- <div><text-h6><a text-center class="btn-connexion" href="{{ path('app_login')}}" role="button">Se connecter</a></text-h6></div> -->
       </q-toolbar>
     </q-header>
 
-    <q-drawer class="desktop-drawer" v-model="leftDrawerOpen" :breakpoint="767" show-if-above bordered :width="230">
+    <q-drawer v-if="shouldShowHeader" class="desktop-drawer" elevated v-model="leftDrawerOpen" :breakpoint="767" show-if-above bordered :width="230">
       <q-list>
         <q-item-label header>
           Naviguer</q-item-label>
@@ -31,7 +33,8 @@
     </q-drawer>
 
     <q-footer> <q-tabs>
-        <q-route-tab v-for="nav in navs" :key="nav.label" clickable :to="nav.to" exact :icon="nav.icon" :label="nav.label"></q-route-tab>
+        <q-route-tab v-for="nav in navs" :key="nav.label" clickable :to="nav.to" exact :icon="nav.icon"
+          :label="nav.label"></q-route-tab>
       </q-tabs> </q-footer>
 
     <q-page-container>
@@ -42,25 +45,57 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { logout } from '../helpers/authHelpers'
 
 export default defineComponent({
   name: 'MainLayout',
+  computed: {
+    shouldShowHeader () {
+      // Vérifiez si l'utilisateur est authentifié et n'est pas sur la page de connexion
+      return this.isAuthenticated && this.$route.path !== '/se-connecter'
+    }
+  },
 
   setup () {
     const leftDrawerOpen = ref(false)
+    const router = useRouter()
+    const isAuthenticated = localStorage.getItem('userToken') !== null
+    console.log(isAuthenticated + 'ici')
+
+    if (!isAuthenticated) {
+      router.push('/se-connecter')
+    }
 
     return {
       leftDrawerOpen,
+      isAuthenticated,
+      logout,
       navs: [
         {
           label: 'Rendez-vous',
           icon: 'event',
-          to: '/'
+          to: '/gestion-rdv'
+        },
+        {
+          label: 'Gestion',
+          icon: 'event',
+          to: '/gestion-administrative'
+        },
+        {
+          label: 'Tableau de bord',
+          icon: 'radar',
+          to: '/espace-direction'
         },
         {
           label: 'Patients',
-          icon: 'list',
+          icon: 'face',
           to: '/patients'
+        },
+        {
+          label: 'Catalogue des soins',
+          icon: 'list',
+          to: '/catalogue'
         },
         {
           label: 'Mon espace',
@@ -75,16 +110,17 @@ export default defineComponent({
 
 <style lang="scss">
 @media screen and (min-width: 750.5px) {
-.q-footer{
-display: none;
-}
+  .q-footer {
+    display: none;
+  }
 }
 
 .q-drawer {
   .q-router-link--exact-active {
-  color: $primary !important;
+    color: $primary !important;
+  }
 }
-}
+
 /* .desktop-drawer {
   background-color: blue;
 } */

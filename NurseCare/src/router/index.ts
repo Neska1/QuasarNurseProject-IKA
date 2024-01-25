@@ -3,7 +3,9 @@ import {
   createMemoryHistory,
   createRouter,
   createWebHashHistory,
-  createWebHistory
+  createWebHistory,
+  RouteLocationNormalized,
+  NavigationGuardNext
 } from 'vue-router'
 
 import routes from './routes'
@@ -34,3 +36,21 @@ export default route(function (/* { store, ssrContext } */) {
 
   return Router
 })
+
+export function checkAuthentication (
+  to: RouteLocationNormalized,
+  from: RouteLocationNormalized,
+  next: NavigationGuardNext
+) {
+  const userToken = localStorage.getItem('userToken')
+
+  // Vérifiez si l'utilisateur a un token JWT valide dans le localStorage
+  if (userToken) {
+    // Si l'utilisateur a un token JWT valide, il est authentifié
+    // Vous pouvez ajouter d'autres vérifications de sécurité ici si nécessaire
+    next()
+  } else {
+    // Si l'utilisateur n'a pas de token JWT valide, redirigez-le vers la page de connexion
+    next('/se-connecter')
+  }
+}
