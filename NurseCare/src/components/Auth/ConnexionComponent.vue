@@ -26,7 +26,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import { validateEmail, validatePassword } from 'src/helpers/InputHelper'
-import { QInput, useQuasar } from 'quasar' // Si vous avez les types Quasar installés
+import { QInput, useQuasar } from 'quasar'
 import { useRouter } from 'vue-router'
 import { api } from 'boot/axios'
 import { fetchPersonnelInfo } from 'src/services/utilisateurService'
@@ -69,8 +69,6 @@ export default defineComponent({
         router.push('/')
       } catch (error) {
         console.error('Login failed:', error)
-        // Affichage d'un message d'erreur
-        // Vous pouvez utiliser Quasar Notify ou une autre méthode pour informer l'utilisateur
         useQuasar().notify({
           type: 'negative',
           message: 'Échec de la connexion. Veuillez vérifier vos identifiants.'

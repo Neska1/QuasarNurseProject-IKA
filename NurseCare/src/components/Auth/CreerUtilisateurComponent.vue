@@ -26,7 +26,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import { validateEmail, validatePassword } from 'src/helpers/InputHelper'
-import { QInput } from 'quasar' // Si vous avez les types Quasar installés
+import { QInput } from 'quasar'
 export default defineComponent({
   name: 'CreerUtilisateurComponent',
   setup () {
@@ -35,8 +35,6 @@ export default defineComponent({
       password: ''
     })
 
-    // Typage des refs avec `any` pour éviter les erreurs TypeScript
-    // Si vous avez les types Quasar, vous pouvez remplacer `any` par `QInput`
     const emailInput = ref<QInput>()
     const passwordInput = ref<QInput>()
 

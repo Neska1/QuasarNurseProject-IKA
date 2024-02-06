@@ -15,9 +15,8 @@
     </form>
   </q-card>
 </template>
-
 <script lang="ts">
-import { defineComponent, ref, toRefs, watch, PropType } from 'vue'
+import { defineComponent, ref, watch, PropType } from 'vue'
 import { Patient } from 'src/models/patient.model'
 
 export default defineComponent({
@@ -25,44 +24,26 @@ export default defineComponent({
   props: {
     patientToEdit: {
       type: Object as PropType<Patient>,
-      default: null
+      default: () => ({
+        nom: '',
+        prenom: '',
+        date_naissance: '',
+        rue: '',
+        ville: '',
+        code_postal: '',
+        id_patient: 0
+      })
     },
-    isDisabled: {
-      type: Boolean,
-      default: false
-    }
+    isDisabled: Boolean
   },
   setup (props) {
-    const { patientToEdit } = toRefs(props)
-    const patient = ref<Patient>(patientToEdit.value || {
-      nom: '',
-      prenom: '',
-      date_naissance: '',
-      rue: '',
-      ville: '',
-      code_postal: '',
-      id_patient: 0
+    const patient = ref<Patient>({ ...props.patientToEdit })
+
+    watch(() => props.patientToEdit, (newVal) => {
+      patient.value = { ...newVal }
     })
 
-    watch(patientToEdit, (newPatient) => {
-      if (newPatient) {
-        patient.value = { ...newPatient }
-      } else {
-        patient.value = {
-          nom: '',
-          prenom: '',
-          date_naissance: '',
-          rue: '',
-          ville: '',
-          code_postal: '',
-          id_patient: 0
-        }
-      }
-    }, { immediate: true })
-
-    return {
-      patient
-    }
+    return { patient }
   }
 })
 </script>

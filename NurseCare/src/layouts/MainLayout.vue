@@ -52,7 +52,7 @@ export default defineComponent({
   name: 'MainLayout',
   computed: {
     shouldShowHeader () {
-      // Vérifiez si l'utilisateur est authentifié et n'est pas sur la page de connexion
+      // Vérifier si l'utilisateur est authentifié et n'est pas sur la page de connexion
       return this.isAuthenticated && this.$route.path !== '/se-connecter'
     }
   },

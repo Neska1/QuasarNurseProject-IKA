@@ -48,7 +48,6 @@ export default defineComponent({
 
     const columns: QTableColumn[] = [
       { name: 'prevision', label: 'Prévision', field: 'prevision', sortable: true, align: 'left' },
-      { name: 'date_realisation', label: 'Date réelle', field: row => row.date_realisation.toLocaleDateString(), sortable: true, align: 'left' },
       { name: 'id_patient', label: 'Patient', field: row => row.Patient ? (row.Patient.nom + ' ' + row.Patient.prenom) : 'Non catégorisé', sortable: true, align: 'left' },
       { name: 'id_etat', label: 'Etat', field: row => row.EtatIntervention ? row.EtatIntervention.libelle : 'Non catégorisé', sortable: true, align: 'left' }
     ]

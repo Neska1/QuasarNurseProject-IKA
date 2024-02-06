@@ -17,7 +17,13 @@
           </div>
           <q-dialog v-model="isConsultationPatientOpen">
             <q-card style="min-width: 250px;">
-              <AjouterPatientComponent :isDisabled="false"  />
+              <q-toolbar>
+                <q-toolbar-title>
+                  <span class="text-weight-bold" style=":padding-top: 15px;">Consulter un patient</span>
+                </q-toolbar-title>
+                <q-btn flat round dense icon="close" v-close-popup />
+              </q-toolbar>
+              <ConsulterPatientComponent :patientToEdit="selectedPatient" :isDisabled="true" />
               <q-card-actions>
                 <q-btn flat label="Fermer" color="primary" v-close-popup />
                 <q-btn flat label="Éditer" color="primary" @click="ouvrirEditionPatient(selectedPatient)" />
@@ -46,10 +52,11 @@ import { patients, loadPatients, updatePatient } from '../services/patientServic
 import { Patient } from '../models/patient.model'
 import AjouterPatientComponent from '../components/AjouterPatientComponent.vue'
 import { calculerAge } from '../helpers/patientHelper'
+import ConsulterPatientComponent from '../components/ConsulterPatientComponent.vue'
 
 export default defineComponent({
   name: 'GererPatients',
-  components: { AjouterPatientComponent },
+  components: { AjouterPatientComponent, ConsulterPatientComponent },
   setup () {
     onMounted(loadPatients)
     const selectedPatient = ref<Patient>({
@@ -81,7 +88,6 @@ export default defineComponent({
     const handleUpdatePatient = async () => {
       if (selectedPatient.value) {
         await updatePatient(selectedPatient.value.id_patient, selectedPatient.value)
-        // Vous pouvez ajouter une logique pour fermer le dialogue ou afficher un message
         isConsultationPatientOpen.value = false
       }
     }

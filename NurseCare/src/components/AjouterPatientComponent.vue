@@ -6,30 +6,20 @@
           <q-avatar>
             <img src="https://img.freepik.com/vecteurs-premium/ecouter-musique-dans-foule_23-2148401311.jpg?w=1380">
           </q-avatar>
-
           <q-toolbar-title>
-            <span class="text-weight-bold">{{ titreForm }}</span> un patient
+            <!-- Le titre ne fonctionne pas en édition !  -->
+            <span class="text-weight-bold">{{ titreForm }}</span>
           </q-toolbar-title>
-
           <q-btn flat round dense icon="close" v-close-popup />
         </q-toolbar>
-        <q-space />
       </q-card-section>
-      <q-card-section class="q-pt-none">
-        <q-input stack-label outlined label="Nom" v-model="patient.nom" ref="nomInput" :disabled="isDisabled" />
-        <q-input stack-label outlined label="Prénom" v-model="patient.prenom" ref="prenomInput" :disabled="isDisabled"  />
-        <q-input stack-label outlined label="Date de naissance" v-model="patient.date_naissance" :disabled="isDisabled"
-          ref="dateNaissanceInput" />
-        <q-input stack-label outlined label="Rue" v-model="patient.rue" ref="rueInput" :disabled="isDisabled"  />
-        <q-input stack-label outlined label="Code postal" v-model="patient.code_postal" ref="codePostalInput" :disabled="isDisabled"  />
-        <q-input stack-label outlined label="Ville" v-model="patient.ville" ref="villeInput" :disabled="isDisabled" />
-      </q-card-section>
-<consulter-patient-component></consulter-patient-component>
-      <q-card-actions>
-        <q-btn flat label="Annuler" color="primary" v-close-popup />
-        <q-space />
-        <q-btn flat label="Valider" color="primary" type="submit" />
-      </q-card-actions>
+      <ConsulterPatientComponent :patientToEdit="patient" :isDisabled="false">
+      </ConsulterPatientComponent>
+      <q-card-actions >
+            <q-btn flat label="Annuler" color="primary" v-close-popup />
+            <q-space></q-space>
+            <q-btn flat label="Valider" color="primary" type="submit" />
+          </q-card-actions>
     </form>
   </q-card>
 </template>
@@ -69,7 +59,6 @@ export default defineComponent({
       if (newPatient) {
         patient.value = { ...newPatient }
       } else {
-        // Réinitialiser pour le mode ajout
         patient.value = {
           nom: '',
           prenom: '',
@@ -82,8 +71,7 @@ export default defineComponent({
       }
     }, { immediate: true })
 
-    // Propriété calculée pour le titre
-    const titreForm = computed(() => patient.value.id_patient > 0 ? 'Édition' : 'Ajouter')
+    const titreForm = computed(() => patient.value.id_patient > 0 ? 'Éditer un patient' : 'Ajouter un patient')
 
     const submitForm = async () => {
       if (patient.value.id_patient) {

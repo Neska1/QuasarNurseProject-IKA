@@ -44,13 +44,10 @@ export function checkAuthentication (
 ) {
   const userToken = localStorage.getItem('userToken')
 
-  // Vérifiez si l'utilisateur a un token JWT valide dans le localStorage
   if (userToken) {
     // Si l'utilisateur a un token JWT valide, il est authentifié
-    // Vous pouvez ajouter d'autres vérifications de sécurité ici si nécessaire
     next()
   } else {
-    // Si l'utilisateur n'a pas de token JWT valide, redirigez-le vers la page de connexion
     next('/se-connecter')
   }
 }
