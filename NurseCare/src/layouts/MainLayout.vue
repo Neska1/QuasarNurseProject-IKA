@@ -73,17 +73,17 @@ export default defineComponent({
       logout,
       navs: [
         {
-          label: 'Rendez-vous',
+          label: 'Rendez-vous (I)',
           icon: 'event',
           to: '/gestion-rdv'
         },
         {
-          label: 'Gestion',
+          label: 'Gestion (ADM)',
           icon: 'event',
           to: '/gestion-administrative'
         },
         {
-          label: 'Tableau de bord',
+          label: 'Tableau de bord (DIR)',
           icon: 'radar',
           to: '/espace-direction'
         },

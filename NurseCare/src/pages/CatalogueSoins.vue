@@ -3,7 +3,7 @@
     <h5>Catalogue des soins</h5>
     <div class="q-pa-md">
 
-    <q-table flat bordered :rows="catalogue" :columns="columns" row-key="cat_id"
+    <q-table flat bordered :rows="catalogue" :columns="columns" row-key="id_catalogue"
     rows-per-page-label="Nombre d'éléments par page : ">
       <template v-slot:body-cell-libelle="props">
         <q-td :props="props">
@@ -17,9 +17,9 @@
         </q-td>
       </template>
 
-      <template v-slot:body-cell-cat_id="props">
+      <template v-slot:body-cell-id_catalogue="props">
         <q-td :props="props">
-          {{ props.row.lib_cat_id }}
+          {{ props.row.id_catalogue }}
         </q-td>
       </template>
     </q-table></div>
@@ -39,7 +39,7 @@ export default defineComponent({
     const columns: QTableColumn[] = [
       { name: 'libelle', label: 'Libellé des soins', field: 'libelle', sortable: true, align: 'left' },
       { name: 'prix', label: 'Prix', field: 'prix', sortable: true, align: 'left' },
-      { name: 'cat_id', label: 'Catégorie', field: 'cat_id', sortable: true, align: 'left' }
+      { name: 'id_categorie', label: 'Catégorie', field: row => row.CategorieCatalogue ? row.CategorieCatalogue.libelle : 'Non catégorisé', sortable: true, align: 'left' }
     ]
 
     return {

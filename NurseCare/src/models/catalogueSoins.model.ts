@@ -1,6 +1,9 @@
 export interface CatalogueSoins {
-  cat_id: number;
+  id_catalogue: number;
   libelle: string;
   prix: number;
-  lib_cat_id: number;
+  Categorie: {
+    id_categorie: number;
+    libelle: string;
+  };
 }

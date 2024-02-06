@@ -1,4 +1,4 @@
 export interface Categorie {
-  lib_cat_id: number;
+  id_categorie: number;
   libelle: string;
 }

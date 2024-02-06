@@ -23,7 +23,6 @@
           <p>Contactez le service de la direction pour obtenir vos identifiants.</p>
           <br>
           <br>
-                 <CreerUtilisateurComponent />
         </q-tab-panel>
       </q-tab-panels>
     </q-card>
@@ -34,13 +33,11 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import ConnexionComponent from 'components/Auth/ConnexionComponent.vue'
-import CreerUtilisateurComponent from 'components/Auth/CreerUtilisateurComponent.vue'
 
 export default defineComponent({
   name: 'PageAuthentification',
   components: {
-    ConnexionComponent,
-    CreerUtilisateurComponent
+    ConnexionComponent
   },
   setup () {
     const tab = ref('connexion')

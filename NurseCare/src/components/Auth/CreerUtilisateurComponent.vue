@@ -9,7 +9,7 @@
       </q-banner>
     </div>
     <div class="row q-mb-md">
-      <q-input outlined class="col" label="Email" stack-label v-model="formData.email" ref="emailInput"
+      <q-input outlined class="col" label="email" stack-label v-model="formData.email" ref="emailInput"
         :rules="[validateEmail]" lazy-rules="ondemand" />
     </div>
     <div class="row q-mb-md">
@@ -42,9 +42,9 @@ export default defineComponent({
 
     const submitForm = async () => {
       console.log('Form submitted:', formData.value)
-      const isValidEmail = await emailInput.value?.validate()
+      const isValidemail = await emailInput.value?.validate()
       const isValidPassword = await passwordInput.value?.validate()
-      if (isValidEmail && isValidPassword) {
+      if (isValidemail && isValidPassword) {
         console.log('register user')
       }
     }

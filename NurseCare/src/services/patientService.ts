@@ -17,7 +17,7 @@ const loadPatients = async () => {
 
 const createPatient = async (patientData: Patient) => {
   try {
-    const response = await api.post('/patient', patientData)
+    const response = await api.post('/patients/patient', patientData)
     return response.data
   } catch (error) {
     console.error('Erreur lors de la création du patient:', error)

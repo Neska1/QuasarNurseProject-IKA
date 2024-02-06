@@ -1,7 +1,9 @@
 export interface Patient {
-  p_id: number;
+  id_patient: number;
   nom: string;
   prenom: string;
-  createdAt: Date;
-  updatedAt: Date;
+  date_naissance: string;
+  rue: string;
+  ville: string;
+  code_postal: string;
 }

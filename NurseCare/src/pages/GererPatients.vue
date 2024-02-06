@@ -1,34 +1,42 @@
 <template>
   <q-page padding>
-    <h5 style="margin-left: 20px;" >Liste des patients</h5>
-    <p style="margin-left: 20px;" >Cliquez sur un patient pour le consulter.</p>
-    <div class="q-pa-md" style="max-width: 350px">
-      <q-list bordered separator v-for="patient in patients" :key="patient.p_id">
-        <q-item clickable v-ripple @click="openPatientDialog(patient)">
-          <q-item-section> {{ patient.nom }} {{ patient.prenom }}</q-item-section>
-          <q-item-section side>
-            <q-icon name="visibility_out" size="xs" />
-          </q-item-section>
-        </q-item>
-      </q-list>
-    </div>
+    <div class="q-pa-md example-row-stacked-to-horizontal">
+      <div class="row">
+        <div class="col-12 col-md-8">
+          <h5 class="mr-left">Liste des patients</h5>
+          <p class="mr-left">Cliquez sur un patient pour le consulter.</p>
+          <div class="q-pa-md" style="max-width: 350px">
+            <q-list bordered separator v-for="patient in patients" :key="patient.id_patient">
+              <q-item clickable v-ripple @click="ouvrirConsultationPatient(patient)">
+                <q-item-section> {{ patient.nom }} {{ patient.prenom }}</q-item-section>
+                <q-item-section side>
+                  <q-icon name="visibility_out" size="xs" />
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </div>
+          <q-dialog v-model="isConsultationPatientOpen">
+            <q-card style="min-width: 250px;">
+              <AjouterPatientComponent :isDisabled="false"  />
+              <q-card-actions>
+                <q-btn flat label="Fermer" color="primary" v-close-popup />
+                <q-btn flat label="Éditer" color="primary" @click="ouvrirEditionPatient(selectedPatient)" />
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
+          <q-dialog v-model="isEditionPatient" persistent transition-show="scale" transition-hide="scale">
+            <q-card class="bg-teal text-white" style="width: 300px">
+              <AjouterPatientComponent :patientToEdit="patientToEdit" @close="isEditionPatient = false"
+                @patient-added="loadPatients" :isDisabled="false" />
+            </q-card>
+          </q-dialog>
+        </div>
+        <div class="col-12 col-md-4" style="margin-top: 90px;">
 
-    <q-dialog v-model="isDialogOpen" >
-      <q-card style="min-width: 250px;" >
-        <q-card-section >
-          <div class="text-h6"> {{ selectedPatient?.nom }} {{ selectedPatient?.prenom }}</div>
-          <br>
-          <div class="text"> Age </div>
-          <div class="text"> Adresse </div>
-          <div class="text"> Soins associés </div>
-          <!-- Ajoutez d'autres informations du patient ici -->
-        </q-card-section>
-        <q-card-actions>
-          <q-btn flat label="Fermer" color="primary" v-close-popup />
-          <q-btn flat label="Éditer" color="primary" @click="handleUpdatePatient" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+        </div>
+      </div>
+
+    </div>
   </q-page>
 </template>
 
@@ -36,35 +44,72 @@
 import { defineComponent, onMounted, ref } from 'vue'
 import { patients, loadPatients, updatePatient } from '../services/patientService'
 import { Patient } from '../models/patient.model'
+import AjouterPatientComponent from '../components/AjouterPatientComponent.vue'
+import { calculerAge } from '../helpers/patientHelper'
 
 export default defineComponent({
   name: 'GererPatients',
+  components: { AjouterPatientComponent },
   setup () {
     onMounted(loadPatients)
+    const selectedPatient = ref<Patient>({
+      nom: '',
+      prenom: '',
+      date_naissance: '',
+      rue: '',
+      ville: '',
+      code_postal: '',
+      id_patient: 0
+    })
+    const isConsultationPatientOpen = ref(false)
+    const isEditionPatient = ref(false)
+    const patientToEdit = ref<Patient>({
+      nom: '',
+      prenom: '',
+      date_naissance: '',
+      rue: '',
+      ville: '',
+      code_postal: '',
+      id_patient: 0
+    })
 
-    const selectedPatient = ref<Patient | null>(null)
-    const isDialogOpen = ref(false)
-
-    const openPatientDialog = (patient: Patient) => {
+    const ouvrirConsultationPatient = (patient: Patient) => {
       selectedPatient.value = patient
-      isDialogOpen.value = true
+      isConsultationPatientOpen.value = true
     }
 
     const handleUpdatePatient = async () => {
       if (selectedPatient.value) {
-        await updatePatient(selectedPatient.value.p_id, selectedPatient.value)
+        await updatePatient(selectedPatient.value.id_patient, selectedPatient.value)
         // Vous pouvez ajouter une logique pour fermer le dialogue ou afficher un message
-        isDialogOpen.value = false
+        isConsultationPatientOpen.value = false
       }
+    }
+
+    const ouvrirEditionPatient = (patient: Patient) => {
+      patientToEdit.value = patient
+      isEditionPatient.value = true
+      isConsultationPatientOpen.value = false
     }
 
     return {
       patients,
       selectedPatient,
-      isDialogOpen,
-      openPatientDialog,
-      handleUpdatePatient
+      isConsultationPatientOpen,
+      ouvrirConsultationPatient,
+      ouvrirEditionPatient,
+      handleUpdatePatient,
+      calculerAge,
+      patientToEdit,
+      isEditionPatient,
+      loadPatients
     }
   }
 })
 </script>
+
+<style lang="scss">
+.mr-left {
+  margin-left: 20px;
+}
+</style>

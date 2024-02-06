@@ -29,6 +29,9 @@ import { validateEmail, validatePassword } from 'src/helpers/InputHelper'
 import { QInput, useQuasar } from 'quasar' // Si vous avez les types Quasar installés
 import { useRouter } from 'vue-router'
 import { api } from 'boot/axios'
+import { fetchPersonnelInfo } from 'src/services/utilisateurService'
+import { setUserRole } from 'src/helpers/authHelpers'
+
 export default defineComponent({
   name: 'ConnexionComponent',
   setup () {
@@ -38,8 +41,6 @@ export default defineComponent({
     })
 
     const router = useRouter()
-    // Typage des refs avec `any` pour éviter les erreurs TypeScript
-    // Si vous avez les types Quasar, vous pouvez remplacer `any` par `QInput`
     const emailInput = ref<QInput>()
     const passwordInput = ref<QInput>()
 
@@ -59,10 +60,12 @@ export default defineComponent({
           password: formData.value.password
         })
         console.log('Login successful:', response.data)
+        await fetchPersonnelInfo(response.data.id_personnel)
         localStorage.setItem('userToken', response.data.token)
-
-        // Mise à jour de l'état de l'UI ou redirection
-        // Par exemple, redirection vers la page d'accueil
+        localStorage.setItem('userEmail', response.data.email)
+        localStorage.setItem('userIdPersonnel', response.data.id_personnel)
+        // ajouter role ici
+        setUserRole(response.data.role)
         router.push('/')
       } catch (error) {
         console.error('Login failed:', error)
