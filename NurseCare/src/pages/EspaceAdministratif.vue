@@ -1,30 +1,22 @@
 <template>
-  <q-page padding>
-    <p>Espace administratif</p>
-    <p> Consultation des intervention et les passer comme traités </p>
-    <p> Création, modification et suppression de rendez-vous </p>
-    <q-btn class="mr-left" @click="isCreationPatient = true" round dense color="primary" size="20px" icon="add" />
-          <span class="text-right mr-left">Ajouter un patient (DIRECTEUR)</span>
-          <br>
-          <div>
-            <q-dialog v-model="isCreationPatient">
-              <AjouterPatientComponent :isDisabled="false"  />
-            </q-dialog>
-          </div>
-
-          <ListePrestationComponent></ListePrestationComponent>
+  <q-page class="flex flex-center q-pa-md">
+    <div class="center text-center">
+      <h5>Espace administratif</h5>
+      <BarreActionGestionAdministrative padding />
+      <ListePrestationComponent />
+    </div>
   </q-page>
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue'
 import { patients, loadPatients } from '../services/patientService'
-import AjouterPatientComponent from '../components/AjouterPatientComponent.vue'
 import ListePrestationComponent from '../components/ListeInterventionComponent.vue'
+import BarreActionGestionAdministrative from '../components/BarreActionGestionAdministrative.vue'
 
 export default defineComponent({
   name: 'GererPatients',
-  components: { AjouterPatientComponent, ListePrestationComponent },
+  components: { ListePrestationComponent, BarreActionGestionAdministrative },
   setup () {
     onMounted(loadPatients)
     const isCreationPatient = ref(false)

@@ -10,10 +10,13 @@ export interface Intervention {
     nom: string;
     prenom: string;
   }
-  id_personnel: number;
+  Personnel: {
+    id_personnel: number;
+    nom: string;
+    prenom: string;
+  }
   EtatIntervention: {
     id_etat: number;
     libelle: string;
   };
-
 }

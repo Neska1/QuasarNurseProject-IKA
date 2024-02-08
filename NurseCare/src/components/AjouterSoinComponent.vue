@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <q-card>
     <form @submit.prevent="submitForm">
       <q-card-section class="row">
@@ -73,4 +73,4 @@ export default defineComponent({
   }
 })
 
-</script>
+</script> -->

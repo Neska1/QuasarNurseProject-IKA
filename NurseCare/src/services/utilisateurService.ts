@@ -1,5 +1,3 @@
-// patientService.ts
-
 import { ref } from 'vue'
 import { api } from 'boot/axios'
 import type { Utilisateur } from '../models/utilisateur.model'
