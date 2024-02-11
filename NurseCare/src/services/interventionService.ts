@@ -9,31 +9,38 @@ const loadIntervention = async () => {
     const response = await api.get('/intervention')
     intervention.value = response.data
   } catch (error) {
-    console.error('Erreur lors de la récupération du intervention:', error)
+    console.error('Erreur lors de la récupération des interventions:', error)
   }
 }
 
-const createIntervention = async (patientData: Intervention) => {
+const createIntervention = async (interventionData: Intervention) => {
   try {
-    const response = await api.post('/intervention', patientData)
+    const dataToSend = {
+      prevision: interventionData.date_heure.getDate(), // Convertir la date en timestamp si nécessaire
+      id_patient: interventionData.Patient.id_patient,
+      id_personnel: interventionData.Personnel?.id_personnel, // Utiliser ?. pour les champs optionnels
+      id_etat: interventionData.EtatIntervention.id_etat
+    }
+
+    const response = await api.post('/intervention/intervention', dataToSend) // Assurez-vous que l'URL est correcte
     return response.data
   } catch (error) {
-    console.error('Erreur lors de la création du patient:', error)
+    console.error('Erreur lors de la création de l\'intervention:', error)
   }
 }
 
-const updateIntervention = async (patientId: number, patientData: Intervention) => {
+const updateIntervention = async (interventionId: number, interventionData: Intervention) => {
   try {
-    const response = await api.put(`/intervention/${patientId}`, patientData)
+    const response = await api.put(`/intervention/${interventionId}`, interventionData)
     return response.data
   } catch (error) {
     console.error('Erreur lors de la mise à jour du patient:', error)
   }
 }
 
-const deleteIntervention = async (patientId: number) => {
+const deleteIntervention = async (interventionId: number) => {
   try {
-    const response = await api.delete(`/intervention/${patientId}`)
+    const response = await api.delete(`/intervention/${interventionId}`)
     return response.data
   } catch (error) {
     console.error('Erreur lors de la suppression du patient:', error)

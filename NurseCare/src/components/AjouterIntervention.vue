@@ -1,9 +1,9 @@
 <template>
-  <q-card >
+  <q-card style="min-width: 900px; padding: 20px;">
     <form @submit.prevent="submitForm">
       <q-toolbar-title>
-            <h5 class="text-weight-bold">Ajouter une intervention</h5>
-          </q-toolbar-title>
+        <p style="padding:-10px;">Ajouter une intervention</p>
+      </q-toolbar-title>
       <q-card-section class="row">
         <q-input stack-label outlined label="Date" :modelValue="intervention.date_heure" :disabled="isDisabled" readonly
           @click="showDatePicker = true">
@@ -21,12 +21,14 @@
           :disabled="isDisabled" />
         <q-select stack-label outlined label="Intervention" v-model="intervention.Personnel" :options="personnels"
           :disabled="isDisabled" />
+        <q-select stack-label outlined label="Statut" v-model="intervention.EtatIntervention" :options="etats"
+          :disabled="isDisabled" />
       </q-card-section>
-      <q-card-actions >
-            <q-btn flat label="Annuler" color="primary" v-close-popup />
-            <q-space></q-space>
-            <q-btn flat label="Valider" color="primary" type="submit" />
-          </q-card-actions>
+      <q-card-actions>
+        <q-btn flat label="Annuler" color="primary" v-close-popup />
+        <q-space></q-space>
+        <q-btn flat label="Valider" color="primary" type="submit" />
+      </q-card-actions>
     </form>
   </q-card>
 </template>
@@ -38,32 +40,31 @@ import { EtatIntervention } from 'src/models/etatIntervention.model'
 import createService from 'src/services/baseService'
 import { PERSONNEL_ENDPOINT, ETAT_INTERVENTION_ENDPOINT, PATIENT_ENDPOINT } from 'src/services/endpoints'
 import { Personnel } from 'src/models/personnel.model'
+import { createIntervention } from 'src/services/interventionService'
 
 export default defineComponent({
   name: 'AjouterIntervention',
   props: {
-    patientToEdit: {
+    newIntervention: {
       type: Object as PropType<Intervention>,
       default: () => ({
-        nom: '',
-        prenom: '',
-        date_naissance: '',
-        rue: '',
-        ville: '',
-        code_postal: '',
-        id_patient: 0
+        id_etat: 0,
+        id_patient: 0,
+        id_personnel: 0,
+        date_heure: new Date()
       })
     },
     isDisabled: Boolean
   },
-  setup (props) {
-    const intervention = ref<Intervention>({ ...props.patientToEdit })
+  setup (props, { emit }) {
+    const intervention = ref<Intervention>({ ...props.newIntervention })
     const showDatePicker = ref(false)
     const personnels = ref<Personnel[]>([])
     const etats = ref<EtatIntervention[]>([])
     const patients = ref<Patient[]>([])
+    const etatsService = createService(ETAT_INTERVENTION_ENDPOINT)
 
-    watch(() => props.patientToEdit, (newVal) => {
+    watch(() => props.newIntervention, (newVal) => {
       intervention.value = { ...newVal }
     })
 
@@ -72,23 +73,51 @@ export default defineComponent({
       const patientsService = createService(PATIENT_ENDPOINT)
 
       try {
-        const personnelData = await personnelsService.getAllNomPrenom()
-        personnels.value = personnelData.map((p: Personnel) => ({ label: `${p.nom} ${p.prenom}`, value: `${p.nom} ${p.prenom}` }))
+        const personnelData = await personnelsService.getAll() as Personnel[]
+        personnels.value = personnelData.map((p: Personnel) => ({
+          id_personnel: p.id_personnel,
+          nom: p.nom,
+          prenom: p.prenom,
+          label: `${p.nom} ${p.prenom}`
+        }))
         console.log(personnels.value)
-        // etats.value = await etatsService.getAll() as { id_etat: number; libelle: string; }[] || []
 
-        const patientData = await patientsService.getAllNomPrenom()
-        patients.value = patientData.map((p: Patient) => ({ label: `${p.nom} ${p.prenom}`, value: `${p.nom} ${p.prenom}` }))
+        const etatsData = await etatsService.getAll() as EtatIntervention[]
+        etats.value = etatsData.map(e => ({ id_etat: e.id_etat, libelle: e.libelle, label: e.libelle }))
+        console.log(etats.value)
+
+        const patientData = await patientsService.getAll() as Patient[]
+        patients.value = patientData.map((p: Patient) => ({
+          id_patient: p.id_patient,
+          nom: p.nom,
+          prenom: p.prenom,
+          label: `${p.nom} ${p.prenom}`
+        }))
       } catch (error) {
         console.error('Erreur lors du chargement des données:', error)
       }
     })
 
     const submitForm = async () => {
-      console.log('Ajout de l\'intervention:', intervention.value)
+      try {
+        // Construisez l'objet à envoyer en utilisant les IDs
+        const interventionData: Intervention = {
+          id_intervention: intervention.value.id_intervention,
+          date_heure: intervention.value.date_heure,
+          Patient: intervention.value.Patient,
+          Personnel: intervention.value.Personnel,
+          EtatIntervention: intervention.value.EtatIntervention
+        }
+        console.log('Ajout de l\'intervention:', interventionData)
+        const result = await createIntervention(interventionData)
+        console.log('Intervention ajoutée avec succès:', result)
+        emit('intervention-added')
+      } catch (error) {
+        console.error('Erreur lors de l\'ajout de l\'intervention:', error)
+      }
     }
 
-    return { intervention, showDatePicker, personnels, patients }
+    return { intervention, showDatePicker, personnels, patients, etats, submitForm }
   }
 })
 </script>

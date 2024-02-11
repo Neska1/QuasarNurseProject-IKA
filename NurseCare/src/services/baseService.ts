@@ -53,9 +53,10 @@ const creerService = <T>(endpoint: string) => {
   const getAllNomPrenom = async () => {
     try {
       const response = await api.get(`${endpoint}/noms`)
-      return response.data.map((item: { nom: string; prenom: string }) => ({
+      return response.data.map((item: { nom: string; prenom: string; id: number }) => ({
         nom: item.nom,
-        prenom: item.prenom
+        prenom: item.prenom,
+        id: item.id
       }))
     } catch (error) {
       console.error(`Erreur lors de la récupération des données pour les noms et prénoms de ${endpoint}:`, error)
