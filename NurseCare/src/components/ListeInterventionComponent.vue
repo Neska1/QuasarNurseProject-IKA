@@ -1,7 +1,6 @@
 <template>
   <q-page padding>
     <!-- <h5>Liste des interventions</h5> -->
-
     <div class="q-pa-md">
       <q-table flat bordered title="Liste des interventions" :rows="intervention" :columns="columns" row-key="id_intervention">
 

@@ -19,7 +19,7 @@
       <q-card-section class="q-pt-none">
         <q-select stack-label outlined label="Patient" v-model="intervention.Patient" :options="patients"
           :disabled="isDisabled" />
-        <q-select stack-label outlined label="Intervention" v-model="intervention.Personnel" :options="personnels"
+        <q-select stack-label outlined label="Soignant" v-model="intervention.Personnel" :options="personnels"
           :disabled="isDisabled" />
         <q-select stack-label outlined label="Statut" v-model="intervention.EtatIntervention" :options="etats"
           :disabled="isDisabled" />
@@ -100,7 +100,6 @@ export default defineComponent({
 
     const submitForm = async () => {
       try {
-        // Construisez l'objet à envoyer en utilisant les IDs
         const interventionData: Intervention = {
           id_intervention: intervention.value.id_intervention,
           date_heure: intervention.value.date_heure,

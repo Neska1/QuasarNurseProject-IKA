@@ -13,16 +13,28 @@ const loadIntervention = async () => {
   }
 }
 
+const getInterventionsByDateAndPersonnel = async (date: string, personnelId: number) => {
+  try {
+    const isoDate = new Date(date).toISOString()
+    console.log('isoDate:', isoDate)
+    const response = await api.get(`/intervention/intervention/${isoDate}/${personnelId}`)
+    console.log('response:', response)
+    return response.data
+  } catch (error) {
+    console.error('Erreur lors de la récupération des interventions par date et patient:', error)
+  }
+}
+
 const createIntervention = async (interventionData: Intervention) => {
   try {
     const dataToSend = {
-      prevision: interventionData.date_heure.getDate(), // Convertir la date en timestamp si nécessaire
+      prevision: interventionData.date_heure.getDate(),
       id_patient: interventionData.Patient.id_patient,
-      id_personnel: interventionData.Personnel?.id_personnel, // Utiliser ?. pour les champs optionnels
+      id_personnel: interventionData.Personnel?.id_personnel,
       id_etat: interventionData.EtatIntervention.id_etat
     }
 
-    const response = await api.post('/intervention/intervention', dataToSend) // Assurez-vous que l'URL est correcte
+    const response = await api.post('/intervention/intervention', dataToSend)
     return response.data
   } catch (error) {
     console.error('Erreur lors de la création de l\'intervention:', error)
@@ -47,4 +59,4 @@ const deleteIntervention = async (interventionId: number) => {
   }
 }
 
-export { intervention, loadIntervention, createIntervention, updateIntervention, deleteIntervention }
+export { intervention, loadIntervention, createIntervention, updateIntervention, deleteIntervention, getInterventionsByDateAndPersonnel as getInterventionsByDateAndPatient }
