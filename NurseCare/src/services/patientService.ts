@@ -26,7 +26,7 @@ const createPatient = async (patientData: Patient) => {
 
 const updatePatient = async (patientId: number, patientData: Patient) => {
   try {
-    const response = await api.put(`/patient/${patientId}`, patientData)
+    const response = await api.put(`/patients/patient/${patientId}`, patientData)
     return response.data
   } catch (error) {
     console.error('Erreur lors de la mise à jour du patient:', error)

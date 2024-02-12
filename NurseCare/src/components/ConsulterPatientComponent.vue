@@ -5,8 +5,8 @@
       <q-card-section class="q-pt-none">
         <q-input stack-label outlined label="Nom" v-model="patient.nom" :disabled="isDisabled" />
         <q-input stack-label outlined label="Prénom" v-model="patient.prenom" :disabled="isDisabled" />
-        <q-input stack-label outlined label="Date de naissance" :modelValue="patient.date_naissance" :disabled="isDisabled"
-          readonly @click="showDatePicker = true">
+        <q-input stack-label outlined label="Date de naissance" :modelValue="patient.date_naissance"
+          :disabled="isDisabled" readonly @click="showDatePicker = true">
           <template v-slot:append>
             <q-icon name="event" class="cursor-pointer" @click="showDatePicker = true"></q-icon>
           </template>
@@ -23,7 +23,7 @@
   </q-card>
 </template>
 <script lang="ts">
-import { defineComponent, ref, watch, PropType } from 'vue'
+import { defineComponent, ref, PropType } from 'vue'
 import { Patient } from 'src/models/patient.model'
 
 export default defineComponent({
@@ -31,27 +31,15 @@ export default defineComponent({
   props: {
     patientToEdit: {
       type: Object as PropType<Patient>,
-      default: () => ({
-        nom: '',
-        prenom: '',
-        date_naissance: '',
-        rue: '',
-        ville: '',
-        code_postal: '',
-        id_patient: 0
-      })
+      required: true
     },
     isDisabled: Boolean
   },
   setup (props) {
-    const patient = ref<Patient>({ ...props.patientToEdit })
     const showDatePicker = ref(false)
+    const patient = ref(props.patientToEdit)
 
-    watch(() => props.patientToEdit, (newVal) => {
-      patient.value = { ...newVal }
-    })
-
-    return { patient, showDatePicker }
+    return { showDatePicker, patient }
   }
 })
 </script>

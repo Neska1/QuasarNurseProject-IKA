@@ -29,7 +29,6 @@ import { defineComponent, ref, toRefs, watch, PropType, computed } from 'vue'
 import { createPatient, updatePatient } from 'src/services/patientService'
 import { Patient } from 'src/models/patient.model'
 import ConsulterPatientComponent from './ConsulterPatientComponent.vue'
-
 export default defineComponent({
   name: 'AjouterPatientComponent',
   components: { ConsulterPatientComponent },
@@ -58,16 +57,7 @@ export default defineComponent({
     watch(patientToEdit, (newPatient) => {
       if (newPatient) {
         patient.value = { ...newPatient }
-      } else {
-        patient.value = {
-          nom: '',
-          prenom: '',
-          date_naissance: '',
-          rue: '',
-          ville: '',
-          code_postal: '',
-          id_patient: 0
-        }
+        console.log(newPatient, patient.value)
       }
     }, { immediate: true })
 

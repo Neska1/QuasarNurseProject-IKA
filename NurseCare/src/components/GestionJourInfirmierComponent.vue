@@ -9,7 +9,7 @@
                 <q-img style="width: 40px" :ratio="1" class="rounded-borders" />
                 <div class="text-h6 q-ml-md text-white">{{ dateJour }}</div>
               </div>
-              <div><text style="color: white; margin-right: 15px;">Ajouter intervention : </text>
+              <div><text style="color: white; margin-right: 16px;">Ajouter intervention au planning : </text>
                 <q-btn size="13px" round color="warning" icon="add" />
               </div>
             </div>
@@ -30,6 +30,7 @@
           <td class="text-right">{{ intervention.date_heure }}</td>
           <td class="text-right">{{ intervention.Patient.id_patient }}</td>
           <td class="text-right">{{ intervention.Patient.id_patient }}</td>
+          <td class="text-right">{{ intervention.Patient.id_patient }}</td>
           <td class="text-right"> <q-btn size="10px" color="primary" label="Modifier" />
           </td>
         </tr>
@@ -39,8 +40,9 @@
           <td class="text-left"></td>
           <td class="text-right"></td>
           <td class="text-right"></td>
+          <td class="text-right"></td>
           <td class="text-right">Mon trajet :</td>
-          <td class="text-right"> <q-btn size="13px" round color="warning" icon="map" style="margin-right: 20px;" />
+          <td class="text-right" style="padding: 10px"> <q-btn size="14px" round color="warning" icon="map" style="margin-right: 20px; " />
           </td>
         </tr>
       </tbody>

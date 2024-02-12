@@ -43,7 +43,7 @@ import { Personnel } from 'src/models/personnel.model'
 import { createIntervention } from 'src/services/interventionService'
 
 export default defineComponent({
-  name: 'AjouterIntervention',
+  name: 'AjouterInterventionComponent',
   props: {
     newIntervention: {
       type: Object as PropType<Intervention>,
