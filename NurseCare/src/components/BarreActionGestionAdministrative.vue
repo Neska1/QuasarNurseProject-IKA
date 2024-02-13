@@ -1,6 +1,9 @@
 <template>
   <q-btn-group rounded>
-    <q-btn color="primary" rounded glossy icon="timeline" label="Ajouter un soin"/>
+    <q-btn color="primary" rounded glossy icon="timeline" label="Ajouter un soin" @click="isCreationSoin = true" />
+    <q-dialog v-model="isCreationSoin">
+      <p>Futur formulaire de création de soin</p>
+    </q-dialog>
     <q-btn color="primary" rounded glossy icon="visibility" />
     <q-btn color="primary" rounded glossy icon-right="update" @click="isCreationIntervention = true" label="Ajouter une intervention" />
     <q-dialog v-model="isCreationIntervention">
@@ -24,9 +27,11 @@ export default defineComponent({
   setup () {
     const isCreationPatient = ref(false)
     const isCreationIntervention = ref(false)
+    const isCreationSoin = ref(false)
     return {
       isCreationPatient,
-      isCreationIntervention
+      isCreationIntervention,
+      isCreationSoin
     }
   }
 })

@@ -46,7 +46,7 @@ export default defineComponent({
     onMounted(loadIntervention)
 
     const columns: QTableColumn[] = [
-      { name: 'prevision', label: 'Prévision', field: 'prevision', sortable: true, align: 'left' },
+      { name: 'prevision', label: 'Prévision', field: 'date_heure', sortable: true, align: 'left' },
       { name: 'id_patient', label: 'Patient', field: row => row.Patient ? (row.Patient.nom + ' ' + row.Patient.prenom) : 'Non catégorisé', sortable: true, align: 'left' },
       { name: 'id_etat', label: 'Etat', field: row => row.EtatIntervention ? row.EtatIntervention.libelle : 'Non catégorisé', sortable: true, align: 'left' }
     ]

@@ -28,7 +28,7 @@ const getInterventionsByDateAndPersonnel = async (date: string, personnelId: num
 const createIntervention = async (interventionData: Intervention) => {
   try {
     const dataToSend = {
-      prevision: interventionData.date_heure.getDate(),
+      prevision: interventionData.date_heure,
       id_patient: interventionData.Patient.id_patient,
       id_personnel: interventionData.Personnel?.id_personnel,
       id_etat: interventionData.EtatIntervention.id_etat

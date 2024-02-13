@@ -22,19 +22,19 @@
           <th class="text-left">Patient</th>
           <th class="text-right">Nombre de prestation</th>
           <th class="text-right">Heure arrivée estimé </th>
-          <th class="text-right">Heure départ estimé</th>
-          <th class="text-right">Gérer</th>
+          <th class="text-right">Adresse</th>
+          <th class="text-right">Ville</th>
           <th class="text-right">Gérer</th>
         </tr>
       </thead>
       <tbody :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'" v-for="(intervention, index) in interventionsDuJour"
         :key="index">
         <tr>
-          <td class="text-left"> {{ intervention.Patient.id_personnel }}</td>
-          <td class="text-right">{{ intervention.date_heure }}</td>
-          <td class="text-right">{{ intervention.Patient.id_patient }}</td>
-          <td class="text-right">{{ intervention.Patient.id_patient }}</td>
-          <td class="text-right">{{ intervention.Patient.id_patient }}</td>
+          <td class="text-left"> {{ intervention.Patient.nom }} {{ intervention.Patient.prenom }}</td>
+          <td class="text-right">{{ 2 }}</td>
+          <td class="text-right">9h30</td>
+          <td class="text-right"> 15 rue des Lilas </td>
+          <td class="text-right">Toulouse </td>
           <td class="text-right"> <q-btn size="10px" color="primary" label="Modifier" />
           </td>
         </tr>
