@@ -73,8 +73,13 @@ export default defineComponent({
       logout,
       navs: [
         {
-          label: 'Rendez-vous (I)',
+          label: 'Mes rendez-vous (I)',
           icon: 'event',
+          to: '/consultation-rdv'
+        },
+        {
+          label: 'Gestion du planning (I)',
+          icon: 'radar',
           to: '/gestion-rdv'
         },
         {

@@ -1,33 +1,33 @@
 <template>
-  <q-page padding>
-    <p>Mes rendez-vous</p>
-    <div class="q-pa-md example-row-equal-width" style="display: flex; justify-content: center;">
-      <div class="col">
-        <q-date v-model="dateDuJour"></q-date>
+  <q-page class="flex flex-center">
+    <div class="column items-center q-pa-md" style="max-width: 900px; width: 100%;">
+      <div class="text-h5 q-py-md">Planning du jour</div>
+      <div class="q-pa-md" style="width: 100%; max-width: 300px;">
+        <DateNavigueOneComponent :dateSelectedProp="dateDuJour" @update:dateSelected="(val: string) => dateDuJour = val" @dateChanged="chargerInterventionsDuJour" />
       </div>
-
-      <div class="col">
-        <div class="q-pa-md">
-          <GestionJourInfirmierComponent :appointments="interventionsDuJour" :date="dateDuJour" />
-        </div>
+      <div class="q-pa-md" style="width: 100%;">
+        <GestionJourInfirmierComponent :appointments="interventionsDuJour" :date="dateDuJour" />
       </div>
     </div>
   </q-page>
 </template>
+
 <script lang="ts">
 import { defineComponent, ref, watch, provide } from 'vue'
 import GestionJourInfirmierComponent from 'src/components/GestionJourInfirmierComponent.vue'
 import { getInterventionsByDateAndPatient } from 'src/services/interventionService'
 import { Intervention } from 'src/models/intervention.model'
+import DateNavigueOneComponent from 'src/components/DateNavigueOneComponent.vue'
 
 export default defineComponent({
   name: 'RendezVous',
   components: {
-    GestionJourInfirmierComponent
+    GestionJourInfirmierComponent,
+    DateNavigueOneComponent
   },
   setup () {
     const interventionsDuJour = ref([] as Intervention[])
-    const dateDuJour = ref('')
+    const dateDuJour = ref(new Date().toISOString().split('T')[0])
 
     provide('dateDuJourSelected', dateDuJour)
 
@@ -47,7 +47,8 @@ export default defineComponent({
 
     return {
       dateDuJour,
-      interventionsDuJour
+      interventionsDuJour,
+      chargerInterventionsDuJour
     }
   }
 })

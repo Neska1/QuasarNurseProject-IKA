@@ -12,6 +12,11 @@ const routes: RouteRecordRaw[] = [
         beforeEnter: checkAuthentication
       },
       {
+        path: '/consultation-rdv',
+        component: () => import('pages/EspaceConsultationInfirmier.vue'),
+        beforeEnter: checkAuthentication
+      },
+      {
         path: '/patients',
         component: () => import('pages/GererPatients.vue'),
         beforeEnter: checkAuthentication

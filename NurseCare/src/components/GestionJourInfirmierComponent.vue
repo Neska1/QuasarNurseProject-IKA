@@ -10,7 +10,10 @@
                 <div class="text-h6 q-ml-md text-white">{{ dateJour }}</div>
               </div>
               <div><text style="color: white; margin-right: 16px;">Ajouter intervention au planning : </text>
-                <q-btn size="13px" round color="warning" icon="add" />
+                <q-btn size="13px" round color="warning" icon="add" @click="isAjoutIntervention = true" />
+                <q-dialog v-model="isAjoutIntervention">
+                  <AjouterInterventionAuPlanningComponent :isDisabled="false" />
+                </q-dialog>
               </div>
             </div>
           </th>
@@ -24,9 +27,10 @@
           <th class="text-right">Gérer</th>
         </tr>
       </thead>
-      <tbody :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'" v-for="(intervention, index) in interventionsDuJour" :key="index">
+      <tbody :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'" v-for="(intervention, index) in interventionsDuJour"
+        :key="index">
         <tr>
-          <td class="text-left"> {{ intervention.Patient.id_personnel  }}</td>
+          <td class="text-left"> {{ intervention.Patient.id_personnel }}</td>
           <td class="text-right">{{ intervention.date_heure }}</td>
           <td class="text-right">{{ intervention.Patient.id_patient }}</td>
           <td class="text-right">{{ intervention.Patient.id_patient }}</td>
@@ -42,7 +46,8 @@
           <td class="text-right"></td>
           <td class="text-right"></td>
           <td class="text-right">Mon trajet :</td>
-          <td class="text-right" style="padding: 10px"> <q-btn size="14px" round color="warning" icon="map" style="margin-right: 20px; " />
+          <td class="text-right" style="padding: 10px"> <q-btn size="14px" round color="warning" icon="map"
+              style="margin-right: 20px; " />
           </td>
         </tr>
       </tbody>
@@ -51,10 +56,12 @@
 </template>
 <aaqQ></aaqQ>
 <script>
-import { defineComponent, inject } from 'vue'
+import { defineComponent, inject, ref } from 'vue'
+import AjouterInterventionAuPlanningComponent from './AjouterInterventionAuPlanningComponent.vue'
 
 export default defineComponent({
   name: 'GestionJourInfirmierComponent',
+  components: { AjouterInterventionAuPlanningComponent },
   props: {
     dateDuJour: String,
     interventions: []
@@ -62,13 +69,13 @@ export default defineComponent({
   setup () {
     const dateJour = inject('dateDuJourSelected')
     const interventionsDuJour = inject('interventionsDuJourSelected')
-
+    const isAjoutIntervention = ref(false)
     console.log('dateJour:', dateJour.value)
     console.log('interventionsDuJour:', interventionsDuJour.value)
-
     return {
       dateJour,
-      interventionsDuJour
+      interventionsDuJour,
+      isAjoutIntervention
     }
   }
 })

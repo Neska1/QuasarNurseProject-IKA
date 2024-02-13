@@ -1,8 +1,6 @@
-<!-- <template>
+<template>
   <div>
     <text style="color: white; margin-right: 16px;">Ajouter intervention au planning :</text>
-    <q-btn size="13px" round color="warning" icon="add" @click="openDialog" />
-    <q-dialog v-model="dialogVisible">
       <q-card>
         <q-card-section>
           <q-select v-model="selectedHour" :options="hours" label="Heure" />
@@ -12,7 +10,6 @@
           <q-btn label="Annuler" color="negative" @click="closeDialog" />
         </q-card-actions>
       </q-card>
-    </q-dialog>
   </div>
 </template>
 
@@ -26,25 +23,24 @@ export default {
         { label: "08:00", value: "08:00" },
         { label: "09:00", value: "09:00" },
         { label: "10:00", value: "10:00" }
-      ],
-    };
+      ]
+    }
   },
   methods: {
-    openDialog() {
+    openDialog () {
       this.dialogVisible = true
     },
-    closeDialog() {
+    closeDialog () {
       this.dialogVisible = false
     },
-    validateForm() {
+    validateForm () {
       // Perform validation and submit the form
-      const dateHeure = `${this.selectedHour} ${this.selectedDate}`;
+      const dateHeure = `${this.selectedHour} ${this.selectedDate}`
       // Call the API to save the intervention with the selected date and time
-    },
-  },
-};
+    }
+  }
+}
 </script>
 
 <style scoped>
-/* Add your component-specific styles here */
-</style> -->
+</style>

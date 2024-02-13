@@ -1,0 +1,84 @@
+<template>
+  <q-page class="row justify-center">
+    <div class="column items-center q-pa-md" style="max-width: 900px; width: 100%;">
+      <i>
+        <div class="text-h5 q-py-md">Consulter mes rendez-vous</div>
+      </i>
+      <div class="q-pa-md" style="width: 100%; max-width: 300px;">
+        <DateNavigueOneComponent :dateSelectedProp="dateSelected"
+          @update:dateSelected="(val: string) => dateSelected = val" @dateChanged="chargerInterventionsDuJour" />
+      </div>
+      <div class="q-pa-md" style="width: 100%;">
+        <ConsulterRendezVousComponent :interventions="interventionsDuJour"
+          :prestationsParIntervention="prestationsParIntervention" />
+      </div>
+    </div>
+  </q-page>
+</template>
+
+<script lang="ts">
+import { defineComponent, ref, watch, provide, computed } from 'vue'
+import ConsulterRendezVousComponent from './ConsulterRendezVousComponent.vue'
+import { getInterventionsByDateAndPatient } from 'src/services/interventionService'
+import { Intervention } from 'src/models/intervention.model'
+import { DateTimeOptions } from 'vue-i18n'
+import { premiereLettreUpperCase } from 'src/helpers/formatHelper'
+import DateNavigueOneComponent from 'src/components/DateNavigueOneComponent.vue'
+import { recupererPrestationsDuneIntervention } from 'src/services/prestationService'
+import { Prestation } from 'src/models/prestation.model'
+
+export default defineComponent({
+  name: 'ConsultationInfirmier',
+  components: {
+    ConsulterRendezVousComponent,
+    DateNavigueOneComponent
+  },
+  setup () {
+    const dateSelected = ref(new Date().toISOString().split('T')[0])
+    const interventionsDuJour = ref([] as Intervention[])
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
+    const prestationsParIntervention = ref({} as { [key: number]: Prestation[] })
+
+    const dateDuJour = computed(() => {
+      const dateDuJourToString = new Date(dateSelected.value).toLocaleDateString('fr-FR', options as DateTimeOptions)
+      return premiereLettreUpperCase(dateDuJourToString)
+    })
+
+    provide('dateDuJourSelected', dateSelected)
+
+    const chargerInterventionsDuJour = async () => {
+      if (dateSelected.value) {
+        const personnelId = 1 // A CHANGER POUR ROLE
+        const response = await getInterventionsByDateAndPatient(dateSelected.value, personnelId)
+        interventionsDuJour.value = response
+
+        // Réinitialisation
+        for (const key in prestationsParIntervention.value) {
+          if (Object.prototype.hasOwnProperty.call(prestationsParIntervention.value, key)) {
+            delete prestationsParIntervention.value[key]
+          }
+        }
+
+        // Charger les presta
+        await Promise.all(interventionsDuJour.value.map(async (intervention) => {
+          const prestations = await recupererPrestationsDuneIntervention(intervention.id_intervention)
+          prestationsParIntervention.value[intervention.id_intervention] = prestations.data
+        }))
+      }
+    }
+
+    provide('interventionsDuJourSelected', interventionsDuJour)
+
+    watch(dateSelected, chargerInterventionsDuJour, { immediate: true })
+    watch(interventionsDuJour, () => console.log('interventionsDuJour:', interventionsDuJour.value))
+
+    return {
+      dateSelected,
+      interventionsDuJour,
+      dateDuJour,
+      chargerInterventionsDuJour,
+      prestationsParIntervention
+    }
+  }
+})
+</script>

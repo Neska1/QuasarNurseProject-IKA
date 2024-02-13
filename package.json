@@ -1,6 +1,8 @@
 {
   "dependencies": {
     "@fawmi/vue-google-maps": "^0.9.79",
+    "date-fns": "^3.3.1",
+    "intl": "^1.2.5",
     "moment": "^2.30.1"
   }
 }
