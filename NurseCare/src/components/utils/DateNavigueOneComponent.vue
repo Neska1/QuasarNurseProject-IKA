@@ -1,7 +1,7 @@
 <!-- DateNavigueOneComponent.vue -->
 <template>
   <div>
-    <h4 style="white-space: nowrap; margin-left: -20px;">{{ dateDuJour }}</h4>
+    <h4 style="white-space: nowrap; margin-left: -20px;" class="text-weight-light">{{ dateDuJour }}</h4>
     <div class="row" style="margin-top: -20px;">
       <div class="col">
         <q-btn style="margin-top: 9px" flat round dense icon="chevron_left" @click="changerDateParNaviguation(-1)" />
@@ -42,8 +42,11 @@ export default defineComponent({
   setup (props, { emit }) {
     const dateSelected = ref(props.dateSelectedProp)
 
-    watch(() => props.dateSelectedProp, (newVal) => {
-      dateSelected.value = newVal
+    watch(dateSelected, (newValue, oldValue) => {
+      if (newValue !== oldValue) {
+        emit('update:dateSelected', newValue)
+        emit('dateChanged')
+      }
     })
 
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
@@ -57,9 +60,6 @@ export default defineComponent({
       const currentDate = new Date(dateSelected.value)
       const newDate = addDays(currentDate, delta)
       dateSelected.value = format(newDate, 'yyyy-MM-dd')
-      console.log('dateSelected:', dateSelected.value)
-      emit('update:dateSelected', dateSelected.value)
-      emit('dateChanged')
     }
 
     return {

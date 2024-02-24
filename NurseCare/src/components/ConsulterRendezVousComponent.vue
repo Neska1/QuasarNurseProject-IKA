@@ -40,7 +40,7 @@
   </div>
 </template>
 <script>
-import { defineComponent, watch } from 'vue'
+import { defineComponent } from 'vue'
 import { extraireHeureFromISOString } from 'src/helpers/formatHelper'
 import { recupererPrestationsDuneIntervention } from 'src/services/prestationService'
 

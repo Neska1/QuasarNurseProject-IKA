@@ -5,7 +5,7 @@
         <p style="padding:-10px;">Ajouter une intervention</p>
       </q-toolbar-title>
       <q-card-section class="row">
-        <q-input stack-label outlined label="Date" :modelValue="intervention.date_heure" :disabled="isDisabled" readonly
+        <q-input stack-label outlined label="Date" :model-value="formattedDate" :disabled="isDisabled" readonly
           @click="showDatePicker = true">
           <template v-slot:append>
             <q-icon name="event" class="cursor-pointer" @click="showDatePicker = true"></q-icon>
@@ -13,7 +13,7 @@
         </q-input>
         <q-dialog v-model="showDatePicker">
           <q-date v-model="intervention.date_heure" mask="YYYY-MM-DD" @ok="showDatePicker = false"
-            @cancel="showDatePicker = false"></q-date>
+            @cancel="showDatePicker = false"/>
         </q-dialog>
       </q-card-section>
       <q-card-section class="q-pt-none">
@@ -33,7 +33,7 @@
   </q-card>
 </template>
 <script lang="ts">
-import { defineComponent, ref, watch, PropType, onMounted } from 'vue'
+import { defineComponent, ref, watch, PropType, onMounted, computed } from 'vue'
 import { Intervention } from 'src/models/intervention.model'
 import { Patient } from 'src/models/patient.model'
 import { EtatIntervention } from 'src/models/etatIntervention.model'
@@ -41,6 +41,9 @@ import createService from 'src/services/baseService'
 import { PERSONNEL_ENDPOINT, ETAT_INTERVENTION_ENDPOINT, PATIENT_ENDPOINT } from 'src/services/endpoints'
 import { Personnel } from 'src/models/personnel.model'
 import { createIntervention } from 'src/services/interventionService'
+import { format } from 'date-fns'
+import { fr } from 'date-fns/locale'
+import { premiereLettreUpperCase } from 'src/helpers/formatHelper'
 
 export default defineComponent({
   name: 'AjouterInterventionComponent',
@@ -56,6 +59,7 @@ export default defineComponent({
     },
     isDisabled: Boolean
   },
+  emits: ['intervention-added'],
   setup (props, { emit }) {
     const intervention = ref<Intervention>({ ...props.newIntervention })
     const showDatePicker = ref(false)
@@ -63,6 +67,11 @@ export default defineComponent({
     const etats = ref<EtatIntervention[]>([])
     const patients = ref<Patient[]>([])
     const etatsService = createService(ETAT_INTERVENTION_ENDPOINT)
+    const formattedDate = computed(() => {
+      if (!intervention.value.date_heure) return ''
+      const date = new Date(intervention.value.date_heure)
+      return premiereLettreUpperCase(format(date, 'EEEE d MMMM yyyy', { locale: fr }))
+    })
 
     watch(() => props.newIntervention, (newVal) => {
       intervention.value = { ...newVal }
@@ -116,7 +125,7 @@ export default defineComponent({
       }
     }
 
-    return { intervention, showDatePicker, personnels, patients, etats, submitForm }
+    return { intervention, showDatePicker, personnels, patients, etats, submitForm, formattedDate }
   }
 })
 </script>

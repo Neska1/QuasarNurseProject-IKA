@@ -75,12 +75,7 @@ export default defineComponent({
         {
           label: 'Mes rendez-vous (I)',
           icon: 'event',
-          to: '/consultation-rdv'
-        },
-        {
-          label: 'Gestion du planning (I)',
-          icon: 'radar',
-          to: '/gestion-rdv'
+          to: '/espace-infirmier'
         },
         {
           label: 'Gestion (ADM)',

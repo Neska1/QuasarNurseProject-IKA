@@ -1,54 +1,81 @@
 <template>
-  <q-page class="flex flex-center">
+  <q-page class="row justify-center">
     <div class="column items-center q-pa-md" style="max-width: 900px; width: 100%;">
-      <div class="text-h5 q-py-md">Planning du jour</div>
+      <p class="text-h6 text-weight-light">Espace Infirmier</p>
       <div class="q-pa-md" style="width: 100%; max-width: 300px;">
-        <DateNavigueOneComponent :dateSelectedProp="dateDuJour" @update:dateSelected="(val: string) => dateDuJour = val" @dateChanged="chargerInterventionsDuJour" />
+        <DateNavigueOneComponent :dateSelectedProp="dateSelected"
+          @update:dateSelected="(val: string) => dateSelected = val" @dateChanged="chargerInterventionsDuJour" />
       </div>
       <div class="q-pa-md" style="width: 100%;">
-        <GestionJourInfirmierComponent :appointments="interventionsDuJour" :date="dateDuJour" />
+        <ConsulterRendezVousComponent :interventions="interventionsDuJour"
+          :prestationsParIntervention="prestationsParIntervention" />
       </div>
     </div>
   </q-page>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch, provide } from 'vue'
-import GestionJourInfirmierComponent from 'src/components/GestionJourInfirmierComponent.vue'
+import { defineComponent, ref, watch, provide, computed } from 'vue'
+import ConsulterRendezVousComponent from '../components/ConsulterRendezVousComponent.vue'
 import { getInterventionsByDateAndPatient } from 'src/services/interventionService'
 import { Intervention } from 'src/models/intervention.model'
+import { DateTimeOptions } from 'vue-i18n'
+import { premiereLettreUpperCase } from 'src/helpers/formatHelper'
 import DateNavigueOneComponent from 'src/components/utils/DateNavigueOneComponent.vue'
+import { recupererPrestationsDuneIntervention } from 'src/services/prestationService'
+import { Prestation } from 'src/models/prestation.model'
 
 export default defineComponent({
-  name: 'RendezVous',
+  name: 'ConsultationInfirmier',
   components: {
-    GestionJourInfirmierComponent,
+    ConsulterRendezVousComponent,
     DateNavigueOneComponent
   },
   setup () {
+    const dateSelected = ref(new Date().toISOString().split('T')[0])
     const interventionsDuJour = ref([] as Intervention[])
-    const dateDuJour = ref(new Date().toISOString().split('T')[0])
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
+    const prestationsParIntervention = ref({} as { [key: number]: Prestation[] })
 
-    provide('dateDuJourSelected', dateDuJour)
+    const dateDuJour = computed(() => {
+      const dateDuJourToString = new Date(dateSelected.value).toLocaleDateString('fr-FR', options as DateTimeOptions)
+      return premiereLettreUpperCase(dateDuJourToString)
+    })
+
+    provide('dateDuJourSelected', dateSelected)
 
     const chargerInterventionsDuJour = async () => {
-      if (dateDuJour.value) {
-        const personnelId = 1
-        const response = await getInterventionsByDateAndPatient(dateDuJour.value, personnelId)
-        console.log(response)
+      if (dateSelected.value) {
+        const personnelId = 1 // A CHANGER POUR ROLE
+        const response = await getInterventionsByDateAndPatient(dateSelected.value, personnelId)
         interventionsDuJour.value = response
+
+        // Réinitialisation
+        for (const key in prestationsParIntervention.value) {
+          if (Object.prototype.hasOwnProperty.call(prestationsParIntervention.value, key)) {
+            delete prestationsParIntervention.value[key]
+          }
+        }
+
+        // Charger les presta
+        await Promise.all(interventionsDuJour.value.map(async (intervention) => {
+          const prestations = await recupererPrestationsDuneIntervention(intervention.id_intervention)
+          prestationsParIntervention.value[intervention.id_intervention] = prestations.data
+        }))
       }
     }
 
     provide('interventionsDuJourSelected', interventionsDuJour)
 
-    watch(dateDuJour, chargerInterventionsDuJour, { immediate: true })
+    watch(dateSelected, chargerInterventionsDuJour, { immediate: true })
     watch(interventionsDuJour, () => console.log('interventionsDuJour:', interventionsDuJour.value))
 
     return {
-      dateDuJour,
+      dateSelected,
       interventionsDuJour,
-      chargerInterventionsDuJour
+      dateDuJour,
+      chargerInterventionsDuJour,
+      prestationsParIntervention
     }
   }
 })
