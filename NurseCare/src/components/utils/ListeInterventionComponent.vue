@@ -37,7 +37,7 @@
 
 <script lang="ts">
 import { defineComponent, onMounted } from 'vue'
-import { intervention, loadIntervention } from '../services/interventionService'
+import { intervention, loadIntervention } from 'src/services/interventionService'
 import { QTableColumn } from 'quasar'
 
 export default defineComponent({

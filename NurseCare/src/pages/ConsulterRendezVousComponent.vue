@@ -39,9 +39,8 @@
     </q-table>
   </div>
 </template>
-
 <script>
-import { defineComponent } from 'vue'
+import { defineComponent, watch } from 'vue'
 import { extraireHeureFromISOString } from 'src/helpers/formatHelper'
 import { recupererPrestationsDuneIntervention } from 'src/services/prestationService'
 
@@ -64,6 +63,14 @@ export default defineComponent({
         { name: 'Patient', required: true, label: 'Patient', align: 'left', field: row => `${row.Patient.nom} ${row.Patient.prenom}` },
         { name: 'EtatIntervention', required: true, label: 'Etat de l\'intervention', align: 'left', field: row => `${row.EtatIntervention.libelle}` }
       ]
+    }
+  },
+  watch: {
+    async interventions (newInterventions) {
+      for (const intervention of newInterventions) {
+        const prestations = await recupererPrestationsDuneIntervention(intervention.id_intervention)
+        this.$set(this.prestationsParIntervention, intervention.id_intervention, prestations)
+      }
     }
   }
 })

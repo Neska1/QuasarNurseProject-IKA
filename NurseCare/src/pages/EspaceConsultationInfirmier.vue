@@ -23,7 +23,7 @@ import { getInterventionsByDateAndPatient } from 'src/services/interventionServi
 import { Intervention } from 'src/models/intervention.model'
 import { DateTimeOptions } from 'vue-i18n'
 import { premiereLettreUpperCase } from 'src/helpers/formatHelper'
-import DateNavigueOneComponent from 'src/components/DateNavigueOneComponent.vue'
+import DateNavigueOneComponent from 'src/components/utils/DateNavigueOneComponent.vue'
 import { recupererPrestationsDuneIntervention } from 'src/services/prestationService'
 import { Prestation } from 'src/models/prestation.model'
 

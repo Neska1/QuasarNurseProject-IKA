@@ -50,7 +50,7 @@
 import { defineComponent, onMounted, ref } from 'vue'
 import { patients, loadPatients, updatePatient } from '../services/patientService'
 import { Patient } from '../models/patient.model'
-import AjouterPatientComponent from '../components/AjouterPatientComponent.vue'
+import AjouterPatientComponent from '../components/actions/AjouterPatientComponent.vue'
 import { calculerAge } from '../helpers/patientHelper'
 import ConsulterPatientComponent from '../components/ConsulterPatientComponent.vue'
 

@@ -17,7 +17,7 @@ import { defineComponent, ref, watch, provide } from 'vue'
 import GestionJourInfirmierComponent from 'src/components/GestionJourInfirmierComponent.vue'
 import { getInterventionsByDateAndPatient } from 'src/services/interventionService'
 import { Intervention } from 'src/models/intervention.model'
-import DateNavigueOneComponent from 'src/components/DateNavigueOneComponent.vue'
+import DateNavigueOneComponent from 'src/components/utils/DateNavigueOneComponent.vue'
 
 export default defineComponent({
   name: 'RendezVous',

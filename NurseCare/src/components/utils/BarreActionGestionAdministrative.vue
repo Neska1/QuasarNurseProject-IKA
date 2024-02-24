@@ -18,8 +18,8 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
-import AjouterPatientComponent from '../components/AjouterPatientComponent.vue'
-import AjouterInterventionComponent from '../components/AjouterInterventionComponent.vue'
+import AjouterPatientComponent from 'src/components/actions/AjouterPatientComponent.vue'
+import AjouterInterventionComponent from 'src/components/actions/AjouterInterventionComponent.vue'
 
 export default defineComponent({
   name: 'BarreActionGestionAdministrative',

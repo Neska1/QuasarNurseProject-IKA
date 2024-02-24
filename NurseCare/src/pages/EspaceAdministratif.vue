@@ -11,8 +11,8 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue'
 import { patients, loadPatients } from '../services/patientService'
-import ListePrestationComponent from '../components/ListeInterventionComponent.vue'
-import BarreActionGestionAdministrative from '../components/BarreActionGestionAdministrative.vue'
+import ListePrestationComponent from '../components/utils/ListeInterventionComponent.vue'
+import BarreActionGestionAdministrative from '../components/utils/BarreActionGestionAdministrative.vue'
 
 export default defineComponent({
   name: 'GererPatients',
