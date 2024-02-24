@@ -13,7 +13,7 @@
         </q-input>
         <q-dialog v-model="showDatePicker">
           <q-date v-model="intervention.date_heure" mask="YYYY-MM-DD" @ok="showDatePicker = false"
-            @cancel="showDatePicker = false"/>
+            @cancel="showDatePicker = false" />
         </q-dialog>
       </q-card-section>
       <q-card-section class="q-pt-none">
@@ -23,6 +23,7 @@
           :disabled="isDisabled" />
         <q-select stack-label outlined label="Statut" v-model="intervention.EtatIntervention" :options="etats"
           :disabled="isDisabled" />
+        <AjouterPrestationComponent style="margin: 0" />
       </q-card-section>
       <q-card-actions>
         <q-btn flat label="Annuler" color="primary" v-close-popup />
@@ -33,20 +34,28 @@
   </q-card>
 </template>
 <script lang="ts">
-import { defineComponent, ref, watch, PropType, onMounted, computed } from 'vue'
+// :prestations="intervention.Prestations" @update:prestations="(val: Prestation) => intervention.Prestations = val"
+// Models
 import { Intervention } from 'src/models/intervention.model'
 import { Patient } from 'src/models/patient.model'
 import { EtatIntervention } from 'src/models/etatIntervention.model'
+import { Personnel } from 'src/models/personnel.model'
+// Services
+import { defineComponent, ref, watch, PropType, onMounted, computed } from 'vue'
 import createService from 'src/services/baseService'
 import { PERSONNEL_ENDPOINT, ETAT_INTERVENTION_ENDPOINT, PATIENT_ENDPOINT } from 'src/services/endpoints'
-import { Personnel } from 'src/models/personnel.model'
 import { createIntervention } from 'src/services/interventionService'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
 import { premiereLettreUpperCase } from 'src/helpers/formatHelper'
 
+import AjouterPrestationComponent from 'src/components/actions/AjouterPrestationComponent.vue'
+
 export default defineComponent({
   name: 'AjouterInterventionComponent',
+  components: {
+    AjouterPrestationComponent
+  },
   props: {
     newIntervention: {
       type: Object as PropType<Intervention>,
@@ -66,7 +75,6 @@ export default defineComponent({
     const personnels = ref<Personnel[]>([])
     const etats = ref<EtatIntervention[]>([])
     const patients = ref<Patient[]>([])
-    const etatsService = createService(ETAT_INTERVENTION_ENDPOINT)
     const formattedDate = computed(() => {
       if (!intervention.value.date_heure) return ''
       const date = new Date(intervention.value.date_heure)
@@ -78,25 +86,27 @@ export default defineComponent({
     })
 
     onMounted(async () => {
-      const personnelsService = createService(PERSONNEL_ENDPOINT)
-      const patientsService = createService(PATIENT_ENDPOINT)
-
       try {
-        const personnelData = await personnelsService.getAll() as Personnel[]
-        personnels.value = personnelData.map((p: Personnel) => ({
+        const [personnelData, etatsData, patientData] = await Promise.all([
+          createService(PERSONNEL_ENDPOINT).getAll(),
+          createService(ETAT_INTERVENTION_ENDPOINT).getAll(),
+          createService(PATIENT_ENDPOINT).getAll()
+        ]) as [Personnel[], EtatIntervention[], Patient[]]
+
+        personnels.value = (personnelData).map(p => ({
           id_personnel: p.id_personnel,
           nom: p.nom,
           prenom: p.prenom,
           label: `${p.nom} ${p.prenom}`
         }))
-        console.log(personnels.value)
 
-        const etatsData = await etatsService.getAll() as EtatIntervention[]
-        etats.value = etatsData.map(e => ({ id_etat: e.id_etat, libelle: e.libelle, label: e.libelle }))
-        console.log(etats.value)
+        etats.value = etatsData.map(e => ({
+          id_etat: e.id_etat,
+          libelle: e.libelle,
+          label: e.libelle
+        }))
 
-        const patientData = await patientsService.getAll() as Patient[]
-        patients.value = patientData.map((p: Patient) => ({
+        patients.value = patientData.map(p => ({
           id_patient: p.id_patient,
           nom: p.nom,
           prenom: p.prenom,
