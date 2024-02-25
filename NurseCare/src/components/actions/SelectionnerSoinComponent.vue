@@ -1,7 +1,14 @@
 <!-- SelectSoinComponent.vue -->
 <template>
-  <q-select stack-label outlined label="Ajouter un soin" v-model="selectedSoin" :options="catalogue"
-    option-value="id_catalogue" option-label="libelle" @input="emitSoin" />
+  <div class="row">
+    <div class="col" style="margin-right: 15px;">
+      <q-select stack-label outlined label="Ajouter un soin" v-model="selectedSoin" :options="catalogue"
+        option-value="id_catalogue" option-label="libelle" @input="emitSoin" />
+    </div>
+    <div class="col-1" style="display: flex; justify-content: center; align-items: center; width: 40px;">
+      <q-btn size="10px" round color="primary" icon="delete" @click="emitSupprimerSoin" />
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -23,7 +30,11 @@ export default defineComponent({
       selectedSoin.value = null
     }
 
-    return { selectedSoin, emitSoin }
+    const emitSupprimerSoin = () => {
+      emit('supprimerSoin', selectedSoin.value)
+    }
+
+    return { selectedSoin, emitSoin, emitSupprimerSoin }
   }
 })
 </script>
