@@ -1,15 +1,29 @@
 <template>
   <div>
-    <text style="color: white; margin-right: 16px;">Ajouter intervention au planning :</text>
-      <q-card>
-        <q-card-section>
-          <q-select v-model="selectedHour" :options="hours" label="Heure" />
-        </q-card-section>
-        <q-card-actions align="right">
-          <q-btn label="Valider" color="primary" @click="validateForm" />
-          <q-btn label="Annuler" color="negative" @click="closeDialog" />
-        </q-card-actions>
-      </q-card>
+    <text style="color: white; margin-right: 16px;">
+      Ajouter intervention au planning :
+    </text>
+    <q-card>
+      <q-card-section>
+        <q-select
+          v-model="selectedHour"
+          :options="hours"
+          label="Heure"
+        />
+      </q-card-section>
+      <q-card-actions align="right">
+        <q-btn
+          label="Valider"
+          color="primary"
+          @click="validateForm"
+        />
+        <q-btn
+          label="Annuler"
+          color="negative"
+          @click="closeDialog"
+        />
+      </q-card-actions>
+    </q-card>
   </div>
 </template>
 

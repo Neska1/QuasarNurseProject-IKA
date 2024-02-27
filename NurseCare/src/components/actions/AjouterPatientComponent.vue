@@ -10,16 +10,34 @@
             <!-- Le titre ne fonctionne pas en édition !  -->
             <span class="text-weight-bold">{{ titreForm }}</span>
           </q-toolbar-title>
-          <q-btn flat round dense icon="close" v-close-popup />
+          <q-btn
+            v-close-popup
+            flat
+            round
+            dense
+            icon="close"
+          />
         </q-toolbar>
       </q-card-section>
-      <ConsulterPatientComponent :patientToEdit="patient" :isDisabled="false">
-      </ConsulterPatientComponent>
-      <q-card-actions >
-            <q-btn flat label="Annuler" color="primary" v-close-popup />
-            <q-space></q-space>
-            <q-btn flat label="Valider" color="primary" type="submit" />
-          </q-card-actions>
+      <ConsulterPatientComponent
+        :patient-to-edit="patient"
+        :is-disabled="false"
+      />
+      <q-card-actions>
+        <q-btn
+          v-close-popup
+          flat
+          label="Annuler"
+          color="primary"
+        />
+        <q-space />
+        <q-btn
+          flat
+          label="Valider"
+          color="primary"
+          type="submit"
+        />
+      </q-card-actions>
     </form>
   </q-card>
 </template>

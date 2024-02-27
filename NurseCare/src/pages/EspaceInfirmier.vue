@@ -1,14 +1,30 @@
 <template>
   <q-page class="row justify-center">
-    <div class="column items-center q-pa-md" style="max-width: 900px; width: 100%;">
-      <p class="text-h6 text-weight-light">Espace Infirmier</p>
-      <div class="q-pa-md" style="width: 100%; max-width: 300px;">
-        <DateNavigueOneComponent :dateSelectedProp="dateSelected"
-          @update:dateSelected="(val: string) => dateSelected = val" @dateChanged="chargerInterventionsDuJour" />
+    <div
+      class="column items-center q-pa-md"
+      style="max-width: 900px; width: 100%;"
+    >
+      <p class="text-h6 text-weight-light">
+        Espace Infirmier
+      </p>
+      <div
+        class="q-pa-md"
+        style="width: 100%; max-width: 300px;"
+      >
+        <DateNavigueOneComponent
+          :date-selected-prop="dateSelected"
+          @update:date-selected="(val: string) => dateSelected = val"
+          @date-changed="chargerInterventionsDuJour"
+        />
       </div>
-      <div class="q-pa-md" style="width: 100%;">
-        <ConsulterRendezVousComponent :interventions="interventionsDuJour"
-          :prestationsParIntervention="prestationsParIntervention" />
+      <div
+        class="q-pa-md"
+        style="width: 100%;"
+      >
+        <ConsulterRendezVousComponent
+          :interventions="interventionsDuJour"
+          :prestations-par-intervention="prestationsParIntervention"
+        />
       </div>
     </div>
   </q-page>

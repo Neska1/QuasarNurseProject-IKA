@@ -1,17 +1,43 @@
 <template>
   <q-btn-group rounded>
-    <q-btn color="primary" rounded glossy icon="timeline" label="Ajouter un soin" @click="isCreationSoin = true" />
+    <q-btn
+      color="primary"
+      rounded
+      glossy
+      icon="timeline"
+      label="Ajouter un soin"
+      @click="isCreationSoin = true"
+    />
     <q-dialog v-model="isCreationSoin">
       <p>Futur formulaire de création de soin</p>
     </q-dialog>
-    <q-btn color="primary" rounded glossy icon="visibility" />
-    <q-btn color="primary" rounded glossy icon-right="update" @click="isCreationIntervention = true" label="Ajouter une intervention" />
+    <q-btn
+      color="primary"
+      rounded
+      glossy
+      icon="visibility"
+    />
+    <q-btn
+      color="primary"
+      rounded
+      glossy
+      icon-right="update"
+      label="Ajouter une intervention"
+      @click="isCreationIntervention = true"
+    />
     <q-dialog v-model="isCreationIntervention">
-      <AjouterInterventionComponent :isDisabled="false" />
+      <AjouterInterventionComponent :is-disabled="false" />
     </q-dialog>
-    <q-btn color="amber" rounded glossy icon-right="add" @click="isCreationPatient = true" label="Ajouter un patient" />
+    <q-btn
+      color="amber"
+      rounded
+      glossy
+      icon-right="add"
+      label="Ajouter un patient"
+      @click="isCreationPatient = true"
+    />
     <q-dialog v-model="isCreationPatient">
-      <AjouterPatientComponent :isDisabled="false" />
+      <AjouterPatientComponent :is-disabled="false" />
     </q-dialog>
   </q-btn-group>
 </template>

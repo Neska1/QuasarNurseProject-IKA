@@ -25,13 +25,16 @@ const getInterventionsByDateAndPersonnel = async (date: string, personnelId: num
   }
 }
 
-const createIntervention = async (interventionData: Intervention) => {
+const createIntervention = async (interventionData: Intervention, soinsSelectionnes: number[]) => {
   try {
     const dataToSend = {
-      prevision: interventionData.date_heure,
-      id_patient: interventionData.Patient.id_patient,
-      id_personnel: interventionData.Personnel?.id_personnel,
-      id_etat: interventionData.EtatIntervention.id_etat
+      intervention: {
+        date_heure: interventionData.date_heure,
+        id_patient: interventionData.Patient.id_patient,
+        id_personnel: interventionData.Personnel?.id_personnel,
+        id_etat: interventionData.EtatIntervention.id_etat
+      },
+      soinsSelectionnes
     }
 
     const response = await api.post('/intervention/intervention', dataToSend)

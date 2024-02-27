@@ -2,27 +2,33 @@
   <q-page padding>
     <h5>Catalogue des soins</h5>
     <div class="q-pa-md">
+      <q-table
+        flat
+        bordered
+        :rows="catalogue"
+        :columns="columns"
+        row-key="id_catalogue"
+        rows-per-page-label="Nombre d'éléments par page : "
+      >
+        <template #body-cell-libelle="props">
+          <q-td :props="props">
+            {{ props.row.libelle }}
+          </q-td>
+        </template>
 
-    <q-table flat bordered :rows="catalogue" :columns="columns" row-key="id_catalogue"
-    rows-per-page-label="Nombre d'éléments par page : ">
-      <template v-slot:body-cell-libelle="props">
-        <q-td :props="props">
-          {{ props.row.libelle }}
-        </q-td>
-      </template>
+        <template #body-cell-prix="props">
+          <q-td :props="props">
+            {{ props.row.prix }} €
+          </q-td>
+        </template>
 
-      <template v-slot:body-cell-prix="props">
-        <q-td :props="props">
-          {{ props.row.prix }} €
-        </q-td>
-      </template>
-
-      <template v-slot:body-cell-id_catalogue="props">
-        <q-td :props="props">
-          {{ props.row.id_catalogue }}
-        </q-td>
-      </template>
-    </q-table></div>
+        <template #body-cell-id_catalogue="props">
+          <q-td :props="props">
+            {{ props.row.id_catalogue }}
+          </q-td>
+        </template>
+      </q-table>
+    </div>
   </q-page>
 </template>
 

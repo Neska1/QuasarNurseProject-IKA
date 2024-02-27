@@ -1,7 +1,13 @@
 <template>
   <q-page class="home-accueil">
-      <div class="center" :width="500">
-      <img class="img-home-ban" src="src/assets/bandef2.png">
+    <div
+      class="center"
+      :width="500"
+    >
+      <img
+        class="img-home-ban"
+        src="src/assets/bandef2.png"
+      >
     </div>
     <h3 class="title-container text-h4 q-my-md">
       <br>

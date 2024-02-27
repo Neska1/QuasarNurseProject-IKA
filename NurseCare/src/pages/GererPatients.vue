@@ -3,14 +3,33 @@
     <div class="q-pa-md example-row-stacked-to-horizontal">
       <div class="row">
         <div class="col-12 col-md-8">
-          <h5 class="mr-left">Liste des patients</h5>
-          <p class="mr-left">Cliquez sur un patient pour le consulter.</p>
-          <div class="q-pa-md" style="max-width: 350px">
-            <q-list bordered separator v-for="patient in patients" :key="patient.id_patient">
-              <q-item clickable v-ripple @click="ouvrirConsultationPatient(patient)">
+          <h5 class="mr-left">
+            Liste des patients
+          </h5>
+          <p class="mr-left">
+            Cliquez sur un patient pour le consulter.
+          </p>
+          <div
+            class="q-pa-md"
+            style="max-width: 350px"
+          >
+            <q-list
+              v-for="patient in patients"
+              :key="patient.id_patient"
+              bordered
+              separator
+            >
+              <q-item
+                v-ripple
+                clickable
+                @click="ouvrirConsultationPatient(patient)"
+              >
                 <q-item-section> {{ patient.nom }} {{ patient.prenom }}</q-item-section>
                 <q-item-section side>
-                  <q-icon name="visibility_out" size="xs" />
+                  <q-icon
+                    name="visibility_out"
+                    size="xs"
+                  />
                 </q-item-section>
               </q-item>
             </q-list>
@@ -19,29 +38,63 @@
             <q-card style="min-width: 250px;">
               <q-toolbar>
                 <q-toolbar-title>
-                  <span class="text-weight-bold" style=":padding-top: 15px;">Consulter un patient</span>
+                  <span
+                    class="text-weight-bold"
+                    style=":padding-top: 15px;"
+                  >Consulter un patient</span>
                 </q-toolbar-title>
-                <q-btn flat round dense icon="close" v-close-popup />
+                <q-btn
+                  v-close-popup
+                  flat
+                  round
+                  dense
+                  icon="close"
+                />
               </q-toolbar>
-              <ConsulterPatientComponent :patientToEdit="selectedPatient" :isDisabled="true" />
+              <ConsulterPatientComponent
+                :patient-to-edit="selectedPatient"
+                :is-disabled="true"
+              />
               <q-card-actions>
-                <q-btn flat label="Fermer" color="primary" v-close-popup />
-                <q-btn flat label="Éditer" color="primary" @click="ouvrirEditionPatient(selectedPatient)" />
+                <q-btn
+                  v-close-popup
+                  flat
+                  label="Fermer"
+                  color="primary"
+                />
+                <q-btn
+                  flat
+                  label="Éditer"
+                  color="primary"
+                  @click="ouvrirEditionPatient(selectedPatient)"
+                />
               </q-card-actions>
             </q-card>
           </q-dialog>
-          <q-dialog v-model="isEditionPatient" persistent transition-show="scale" transition-hide="scale">
-            <q-card class="bg-teal text-white" style="width: 300px">
-              <AjouterPatientComponent :patientToEdit="patientToEdit" @close="isEditionPatient = false"
-                @patient-added="loadPatients" :isDisabled="false" />
+          <q-dialog
+            v-model="isEditionPatient"
+            persistent
+            transition-show="scale"
+            transition-hide="scale"
+          >
+            <q-card
+              class="bg-teal text-white"
+              style="width: 300px"
+            >
+              <AjouterPatientComponent
+                :patient-to-edit="patientToEdit"
+                :is-disabled="false"
+                @close="isEditionPatient = false"
+                @patient-added="loadPatients"
+              />
             </q-card>
           </q-dialog>
         </div>
-        <div class="col-12 col-md-4" style="margin-top: 90px;">
-
-        </div>
+        <div
+          class="col-12 col-md-4"
+          style="margin-top: 90px;"
+        />
       </div>
-
     </div>
   </q-page>
 </template>

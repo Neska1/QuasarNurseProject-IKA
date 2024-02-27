@@ -1,11 +1,22 @@
 <template>
-  <q-page class="center justify-evenly" padding>
+  <q-page
+    class="center justify-evenly"
+    padding
+  >
     <p>Mon espace</p>
-    <q-card class="my-card" flat bordered style="max-width: 600px;">
+    <q-card
+      class="my-card"
+      flat
+      bordered
+      style="max-width: 600px;"
+    >
       <q-item>
         <q-item-section avatar>
           <q-avatar>
-            <q-icon name="account_circle" color="primary" />
+            <q-icon
+              name="account_circle"
+              color="primary"
+            />
           </q-avatar>
         </q-item-section>
 
@@ -17,7 +28,9 @@
 
       <q-card-section horizontal>
         <q-card-section>
-          <q-item-label  :props="utilisateur">Rôle : {{ utilisateur?.Role.libelle }}</q-item-label>
+          <q-item-label :props="utilisateur">
+            Rôle : {{ utilisateur?.Role.libelle }}
+          </q-item-label>
         </q-card-section>
 
         <q-separator vertical />
