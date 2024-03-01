@@ -78,7 +78,7 @@ import { addDays, format } from 'date-fns'
 
 export default defineComponent({
   name: 'DateNavigueOneComponent',
-  props: ['dateSelectedProp'],
+  props: ['dateSelectedProp'] as const,
   emits: ['update:dateSelected', 'dateChanged'],
   setup (props, { emit }) {
     const dateSelected = ref(props.dateSelectedProp)

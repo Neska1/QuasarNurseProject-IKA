@@ -64,7 +64,7 @@ export default defineComponent({
       if (dateSelected.value) {
         const personnelId = 1 // A CHANGER POUR ROLE
         const response = await getInterventionsByDateAndPatient(dateSelected.value, personnelId)
-        interventionsDuJour.value = response
+        interventionsDuJour.value = response as Intervention[]
 
         // Réinitialisation
         for (const key in prestationsParIntervention.value) {
@@ -75,9 +75,15 @@ export default defineComponent({
 
         // Charger les presta
         await Promise.all(interventionsDuJour.value.map(async (intervention) => {
-          const prestations = await recupererPrestationsDuneIntervention(intervention.id_intervention)
-          prestationsParIntervention.value[intervention.id_intervention] = prestations.data
-        }))
+              try {
+                const response = await recupererPrestationsDuneIntervention(intervention.id_intervention);
+                const prestations = response as Prestation[]
+                prestationsParIntervention.value[intervention.id_intervention] = prestations;
+                console.log('prestationsParIntervention', prestationsParIntervention.value);
+              } catch (error) {
+                console.error('Error fetching prestations for intervention:', error);
+              }
+            }))
       }
     }
 

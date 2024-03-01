@@ -55,9 +55,9 @@
               <ul>
                 <li
                   v-for="prestation in prestationsParIntervention[props.row.id_intervention]"
-                  :key="prestation.id"
+                  :key="prestation.id_categorie"
                 >
-                  {{ prestation.libelle }}
+                  {{ prestation.id_categorie }}
                 </li>
               </ul>
             </div>
@@ -67,8 +67,9 @@
     </q-table>
   </div>
 </template>
+
 <script>
-import { defineComponent } from 'vue'
+import { defineComponent, reactive, watch } from 'vue'
 import { extraireHeureFromISOString } from 'src/helpers/formatHelper'
 import { recupererPrestationsDuneIntervention } from 'src/services/prestationService'
 
@@ -78,28 +79,27 @@ export default defineComponent({
     interventions: {
       type: Array,
       default: () => []
-    },
-    prestationsParIntervention: {
-      type: Object,
-      default: () => ({})
     }
   },
-  data () {
-    return {
+  setup(props) {
+    const state = reactive({
+      prestationsParIntervention: {},
       columns: [
         { name: 'date_heure', required: true, label: 'Heure', align: 'left', field: row => extraireHeureFromISOString(row.date_heure) },
         { name: 'Patient', required: true, label: 'Patient', align: 'left', field: row => `${row.Patient.nom} ${row.Patient.prenom}` },
         { name: 'EtatIntervention', required: true, label: 'Etat de l\'intervention', align: 'left', field: row => `${row.EtatIntervention.libelle}` }
       ]
-    }
-  },
-  watch: {
-    async interventions (newInterventions) {
-      for (const intervention of newInterventions) {
-        const prestations = await recupererPrestationsDuneIntervention(intervention.id_intervention)
-        this.$set(this.prestationsParIntervention, intervention.id_intervention, prestations)
-      }
-    }
+    });
+
+    watch(() => props.interventions, async (newInterventions) => {
+  for (const intervention of newInterventions) {
+    const response = await recupererPrestationsDuneIntervention(intervention.id_intervention);
+    const prestations = response.data;
+    state.prestationsParIntervention[intervention.id_intervention] = prestations;
+  }
+});
+
+    return state;
   }
 })
 </script>
