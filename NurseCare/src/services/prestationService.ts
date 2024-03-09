@@ -7,8 +7,8 @@ const prestationService = creerService('prestation')
 
 async function recupererPrestationsDuneIntervention (idIntervention: number) {
   try {
-    const prestations = await api.get(`${PRESTATION_ENDPOINT}${INTERVENTION_ENDPOINT}/${idIntervention}`) as Prestation[]
-    return prestations
+    const prestations = await api.get<Prestation[]>(`${PRESTATION_ENDPOINT}${INTERVENTION_ENDPOINT}/${idIntervention}`)
+    return prestations.data;
   } catch (error) {
     console.error('Error fetching prestations:', error)
     throw error

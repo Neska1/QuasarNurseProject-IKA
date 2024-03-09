@@ -23,7 +23,7 @@
       >
         <ConsulterRendezVousComponent
           :interventions="interventionsDuJour"
-          :prestations-par-intervention="prestationsParIntervention"
+          @intervention-supprimee="chargerInterventionsDuJour"
         />
       </div>
     </div>
@@ -79,7 +79,6 @@ export default defineComponent({
                 const response = await recupererPrestationsDuneIntervention(intervention.id_intervention);
                 const prestations = response as Prestation[]
                 prestationsParIntervention.value[intervention.id_intervention] = prestations;
-                console.log('prestationsParIntervention', prestationsParIntervention.value);
               } catch (error) {
                 console.error('Error fetching prestations for intervention:', error);
               }
@@ -96,8 +95,7 @@ export default defineComponent({
       dateSelected,
       interventionsDuJour,
       dateDuJour,
-      chargerInterventionsDuJour,
-      prestationsParIntervention
+      chargerInterventionsDuJour
     }
   }
 })

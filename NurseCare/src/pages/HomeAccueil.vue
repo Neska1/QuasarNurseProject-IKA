@@ -1,5 +1,7 @@
 <template>
-  <q-page class="home-accueil">
+  <q-page
+    class="home-accueil"
+  >
     <div
       class="center"
       :width="500"
@@ -9,10 +11,12 @@
         src="src/assets/bandef2.png"
       >
     </div>
-    <h3 class="title-container text-h4 q-my-md">
+
+
+    <!-- <h3 class="title-container text-h4 q-my-md">
       <br>
       Bienvenue sur NurseCare, l'outil qui se soucie de vous.
-    </h3>
+    </h3> -->
   </q-page>
 </template>
 

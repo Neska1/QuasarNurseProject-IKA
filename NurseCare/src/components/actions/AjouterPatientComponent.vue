@@ -47,6 +47,7 @@ import { defineComponent, ref, toRefs, watch, PropType, computed } from 'vue'
 import { createPatient, updatePatient } from 'src/services/patientService'
 import { Patient } from 'src/models/patient.model'
 import ConsulterPatientComponent from '../ConsulterPatientComponent.vue'
+
 export default defineComponent({
   name: 'AjouterPatientComponent',
   components: { ConsulterPatientComponent },
@@ -60,6 +61,7 @@ export default defineComponent({
       default: false
     }
   },
+emits: ['patient-added'],
   setup (props, { emit }) {
     const { patientToEdit } = toRefs(props)
     const patient = ref<Patient>(patientToEdit.value || {

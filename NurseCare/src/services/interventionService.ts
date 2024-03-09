@@ -25,6 +25,15 @@ const getInterventionsByDateAndPersonnel = async (date: string, personnelId: num
   }
 }
 
+const getInterventionById = async (interventionId: number) => {
+  try {
+    const response = await api.get(`/intervention/intervention/${interventionId}`)
+    return response.data
+  } catch (error) {
+    console.error('Erreur lors de la récupération de l intervention :', interventionId, error)
+  }
+}
+
 const createIntervention = async (interventionData: Intervention, soinsSelectionnes: number[]) => {
   try {
     const dataToSend = {
@@ -46,7 +55,7 @@ const createIntervention = async (interventionData: Intervention, soinsSelection
 
 const updateIntervention = async (interventionId: number, interventionData: Intervention) => {
   try {
-    const response = await api.put(`/intervention/${interventionId}`, interventionData)
+    const response = await api.put(`/intervention/intervention/${interventionId}`, interventionData)
     return response.data
   } catch (error) {
     console.error('Erreur lors de la mise à jour du patient:', error)
@@ -55,11 +64,11 @@ const updateIntervention = async (interventionId: number, interventionData: Inte
 
 const deleteIntervention = async (interventionId: number) => {
   try {
-    const response = await api.delete(`/intervention/${interventionId}`)
+    const response = await api.delete(`/intervention/intervention/${interventionId}`)
     return response.data
   } catch (error) {
     console.error('Erreur lors de la suppression du patient:', error)
   }
 }
 
-export { intervention, loadIntervention, createIntervention, updateIntervention, deleteIntervention, getInterventionsByDateAndPersonnel as getInterventionsByDateAndPatient }
+export { intervention, loadIntervention, createIntervention, getInterventionById, updateIntervention, deleteIntervention, getInterventionsByDateAndPersonnel as getInterventionsByDateAndPatient }

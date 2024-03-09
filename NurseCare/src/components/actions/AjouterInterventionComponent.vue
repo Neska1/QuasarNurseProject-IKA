@@ -122,10 +122,10 @@ import { Personnel } from 'src/models/personnel.model'
 import { Prestation } from 'src/models/prestation.model'
 import { CatalogueSoins } from 'src/models/catalogueSoins.model'
 // Services
-import { defineComponent, ref, watch, PropType, onMounted, computed } from 'vue'
+import { defineComponent, ref, watch, PropType, onMounted, computed  } from 'vue'
 import createService from 'src/services/baseService'
 import { PERSONNEL_ENDPOINT, ETAT_INTERVENTION_ENDPOINT, PATIENT_ENDPOINT, CATALOGUE_ENDPOINT } from 'src/services/endpoints'
-import { createIntervention } from 'src/services/interventionService'
+import { createIntervention, getInterventionById, updateIntervention } from 'src/services/interventionService'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
 import { premiereLettreUpperCase } from 'src/helpers/formatHelper'
@@ -133,7 +133,11 @@ import { premiereLettreUpperCase } from 'src/helpers/formatHelper'
 export default defineComponent({
   name: 'AjouterInterventionComponent',
   props: {
-    newIntervention: {
+    idIntervention: {
+      type: Number,
+      default: 0
+    },
+     newIntervention: {
       type: Object as PropType<Intervention>,
       default: () => ({
         id_etat: 0,
@@ -144,7 +148,7 @@ export default defineComponent({
     },
     isDisabled: Boolean
   },
-  emits: ['update:prestations', 'intervention-added', 'removeSoin'],
+  emits: ['update:prestations', 'intervention-added', 'removeSoin', 'intervention-updated'],
   setup(props, { emit }) {
     const optionsCatalogue = computed(() => catalogue.value.map(c => ({ label: c.libelle, value: c.id_catalogue })))
     const intervention = ref<Intervention>({ ...props.newIntervention })
@@ -170,13 +174,53 @@ export default defineComponent({
       }
     })
 
-    watch(() => props.newIntervention, (newVal) => {
-      intervention.value = { ...newVal }
-    })
+    watch(() => props.idIntervention, async (newId, oldId) => {
+      if (newId > 0) {
+        const interventionData = await chargerIntervention(newId);
+        intervention.value = interventionData;
+        console.log(intervention.value, 'inter');
+      } else {
+        intervention.value = getNouvelleIntervention();
+      }
+    }, { immediate: true });
+
+    function getNouvelleIntervention() {
+      return {
+          id_intervention: 0 as number,
+          date_heure: new Date(),
+          Patient: {
+            id_patient: 0 as number,
+            nom: '' as string,
+            prenom: '' as string
+          },
+          Personnel: {
+            id_personnel: 0 as number,
+            nom: '' as string,
+            prenom: '' as string
+          },
+          EtatIntervention: {
+            id_etat: 0 as number,
+            libelle: '' as string
+          }
+      };
+    }
+
+   async function chargerIntervention(id: number) {
+        try{
+            const interventionData = await getInterventionById(id);
+            return interventionData;
+          }
+          catch (error){
+          console.error('Erreur lors du chargement de l\'intervention:', error);
+          return null;
+      }
+
+    }
 
     // ON MOUNTED
     onMounted(async () => {
       try {
+        console.log(intervention.value);
         const [personnelData, etatsData, patientData] = await Promise.all([
           createService(PERSONNEL_ENDPOINT).getAll(),
           createService(ETAT_INTERVENTION_ENDPOINT).getAll(),
@@ -223,20 +267,28 @@ export default defineComponent({
       }
     })
 
-    // AJOUTER INTERVENTION
     const submitForm = async () => {
       try {
-        const interventionData = {
+            const interventionData: Intervention = {
           id_intervention: intervention.value.id_intervention,
           date_heure: intervention.value.date_heure,
           Patient: intervention.value.Patient,
           Personnel: intervention.value.Personnel,
-          EtatIntervention: intervention.value.EtatIntervention
-        } as Intervention
+          EtatIntervention: intervention.value.EtatIntervention,
+        };
 
-        const createdIntervention = await createIntervention(interventionData, soinsSelectionnes.value.filter(v => v !== null) as number[])
+        let resultat;
+        if (intervention.value.id_intervention) {
+          // Mise à jour de l'intervention existante
+          resultat = await updateIntervention(intervention.value.id_intervention, interventionData);
+          emit('intervention-updated', resultat.id_intervention);
+        } else {
+          // Création d'une nouvelle intervention
+          const createdIntervention = await createIntervention(interventionData, soinsSelectionnes.value.filter(v => v !== null) as number[])
+          emit('intervention-added', createdIntervention.id_intervention);
+        }
         console.log('Intervention ajoutée avec succès:', soinsSelectionnes.value)
-        emit('intervention-added', createdIntervention.id_intervention)
+
       } catch (error) {
         console.error('Erreur lors de l\'ajout de l\'intervention:', error)
       }
