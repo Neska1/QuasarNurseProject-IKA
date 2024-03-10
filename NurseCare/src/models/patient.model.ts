@@ -6,4 +6,5 @@ export interface Patient {
   rue?: string;
   ville?: string;
   code_postal?: string;
+  email?: string;
 }

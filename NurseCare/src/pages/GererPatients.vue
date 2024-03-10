@@ -40,7 +40,7 @@
                 <q-toolbar-title>
                   <span
                     class="text-weight-bold"
-                    style=":padding-top: 15px;"
+                    style="padding-top: 15px;"
                   >Consulter un patient</span>
                 </q-toolbar-title>
                 <q-btn
@@ -130,7 +130,8 @@ export default defineComponent({
       rue: '',
       ville: '',
       code_postal: '',
-      id_patient: 0
+      id_patient: 0,
+      email: '',
     })
 
     const ouvrirConsultationPatient = (patient: Patient) => {

@@ -129,6 +129,7 @@ import { createIntervention, getInterventionById, updateIntervention } from 'src
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
 import { premiereLettreUpperCase } from 'src/helpers/formatHelper'
+import { E } from 'app/dist/spa/assets/EspaceInfirmier.c1da79f5'
 
 export default defineComponent({
   name: 'AjouterInterventionComponent',
@@ -170,7 +171,11 @@ export default defineComponent({
       Catalogue: {
         id_catalogue: 0 as number,
         libelle: '' as string,
-        prix: 0 as number
+        prix: 0 as number,
+        CategorieCatalogue: {
+          id_categorie: 0 as number,
+          libelle: '' as string
+        }
       }
     })
 
@@ -180,30 +185,53 @@ export default defineComponent({
         intervention.value = interventionData;
         console.log(intervention.value, 'inter');
       } else {
+        function getNouvelleIntervention() {
+          return {
+            id_intervention: 0 as number,
+            date_heure: new Date(),
+            Patient: {
+              id_patient: 0 as number,
+              nom: '' as string,
+              prenom: '' as string,
+              email: '' as string
+            },
+            Personnel: {
+              id_personnel: 0 as number,
+              nom: '' as string,
+              prenom: '' as string
+            },
+            EtatIntervention: {
+              id_etat: 0 as number,
+              libelle: '' as string
+            }
+          };
+        }
+
         intervention.value = getNouvelleIntervention();
       }
     }, { immediate: true });
 
-    function getNouvelleIntervention() {
-      return {
-          id_intervention: 0 as number,
-          date_heure: new Date(),
-          Patient: {
-            id_patient: 0 as number,
-            nom: '' as string,
-            prenom: '' as string
-          },
-          Personnel: {
-            id_personnel: 0 as number,
-            nom: '' as string,
-            prenom: '' as string
-          },
-          EtatIntervention: {
-            id_etat: 0 as number,
-            libelle: '' as string
-          }
-      };
-    }
+    // function getNouvelleIntervention() {
+    //   return {
+    //       id_intervention: 0 as number,
+    //       date_heure: new Date(),
+    //       Patient: {
+    //         id_patient: 0 as number,
+    //         nom: '' as string,
+    //         prenom: '' as string,
+    //         email: '' as string
+    //       },
+    //       Personnel: {
+    //         id_personnel: 0 as number,
+    //         nom: '' as string,
+    //         prenom: '' as string
+    //       },
+    //       EtatIntervention: {
+    //         id_etat: 0 as number,
+    //         libelle: '' as string
+    //       }
+    //   };
+    // }
 
    async function chargerIntervention(id: number) {
         try{
@@ -244,7 +272,8 @@ export default defineComponent({
           id_patient: p.id_patient,
           nom: p.nom,
           prenom: p.prenom,
-          label: `${p.nom} ${p.prenom}`
+          label: `${p.nom} ${p.prenom}`,
+          email: p.email
         }))
       } catch (error) {
         console.error('Erreur lors du chargement des données:', error)

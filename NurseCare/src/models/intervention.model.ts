@@ -9,6 +9,7 @@ export interface Intervention {
     id_patient: number;
     nom: string;
     prenom: string;
+    email: string;
   }
   Personnel?: {
     id_personnel: number;

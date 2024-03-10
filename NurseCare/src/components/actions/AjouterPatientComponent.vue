@@ -71,7 +71,8 @@ emits: ['patient-added'],
       rue: '',
       ville: '',
       code_postal: '',
-      id_patient: 0
+      id_patient: 0,
+      email: ''
     })
 
     watch(patientToEdit, (newPatient) => {

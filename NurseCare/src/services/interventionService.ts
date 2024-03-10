@@ -6,7 +6,7 @@ const intervention = ref<Intervention[]>([])
 
 const loadIntervention = async () => {
   try {
-    const response = await api.get('/intervention')
+    const response = await api.get<Intervention[]>('/intervention')
     intervention.value = response.data
   } catch (error) {
     console.error('Erreur lors de la récupération des interventions:', error)
@@ -17,7 +17,7 @@ const getInterventionsByDateAndPersonnel = async (date: string, personnelId: num
   try {
     const isoDate = new Date(date).toISOString()
     console.log('isoDate:', isoDate)
-    const response = await api.get(`/intervention/intervention/${isoDate}/${personnelId}`)
+    const response = await api.get<Intervention[]>(`/intervention/intervention/${isoDate}/${personnelId}`)
     console.log('response:', response)
     return response.data
   } catch (error) {
@@ -27,7 +27,7 @@ const getInterventionsByDateAndPersonnel = async (date: string, personnelId: num
 
 const getInterventionById = async (interventionId: number) => {
   try {
-    const response = await api.get(`/intervention/intervention/${interventionId}`)
+    const response = await api.get<Intervention>(`/intervention/intervention/${interventionId}`)
     return response.data
   } catch (error) {
     console.error('Erreur lors de la récupération de l intervention :', interventionId, error)
@@ -46,7 +46,7 @@ const createIntervention = async (interventionData: Intervention, soinsSelection
       soinsSelectionnes
     }
 
-    const response = await api.post('/intervention/intervention', dataToSend)
+    const response = await api.post<Intervention>('/intervention/intervention', dataToSend)
     return response.data
   } catch (error) {
     console.error('Erreur lors de la création de l\'intervention:', error)
@@ -55,7 +55,7 @@ const createIntervention = async (interventionData: Intervention, soinsSelection
 
 const updateIntervention = async (interventionId: number, interventionData: Intervention) => {
   try {
-    const response = await api.put(`/intervention/intervention/${interventionId}`, interventionData)
+    const response = await api.put<Intervention>(`/intervention/intervention/${interventionId}`, interventionData)
     return response.data
   } catch (error) {
     console.error('Erreur lors de la mise à jour du patient:', error)
@@ -64,7 +64,7 @@ const updateIntervention = async (interventionId: number, interventionData: Inte
 
 const deleteIntervention = async (interventionId: number) => {
   try {
-    const response = await api.delete(`/intervention/intervention/${interventionId}`)
+    const response = await api.delete<Intervention>(`/intervention/intervention/${interventionId}`)
     return response.data
   } catch (error) {
     console.error('Erreur lors de la suppression du patient:', error)

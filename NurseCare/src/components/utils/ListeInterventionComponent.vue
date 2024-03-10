@@ -3,6 +3,7 @@
     <!-- <h5>Liste des interventions</h5> -->
     <div class="q-pa-md">
       <q-table
+        class="my-table"
         flat
         bordered
         title="Liste des interventions"
@@ -70,9 +71,11 @@ export default defineComponent({
     onMounted(loadIntervention)
 
     const columns: QTableColumn[] = [
-      { name: 'prevision', label: 'Prévision', field: 'date_heure', sortable: true, align: 'left' },
+      { name: 'date', label: 'Date',   field: row => new Date(row.date_heure).toLocaleDateString(), sortable: true, align: 'left' },
+      { name: 'heure', label: 'Heure',   field: row => new Date(row.date_heure).toLocaleTimeString(), sortable: true, align: 'left' },
       { name: 'id_patient', label: 'Patient', field: row => row.Patient ? (row.Patient.nom + ' ' + row.Patient.prenom) : 'Non catégorisé', sortable: true, align: 'left' },
-      { name: 'id_etat', label: 'Etat', field: row => row.EtatIntervention ? row.EtatIntervention.libelle : 'Non catégorisé', sortable: true, align: 'left' }
+      { name: 'id_etat', label: 'Etat', field: row => row.EtatIntervention ? row.EtatIntervention.libelle : 'Non catégorisé', sortable: true, align: 'left' },
+      { name: 'id_infirmier', label: 'Infirmier', field: row => row.Personnel ? (row.Personnel.nom + ' ' + row.Personnel.prenom) : 'Non catégorisé', sortable: true, align: 'left' }
     ]
 
     return {
@@ -82,3 +85,9 @@ export default defineComponent({
   }
 })
 </script>
+
+<style scoped>
+.my-table {
+  min-width: 1050px;
+}
+</style>
