@@ -129,7 +129,6 @@ import { createIntervention, getInterventionById, updateIntervention } from 'src
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
 import { premiereLettreUpperCase } from 'src/helpers/formatHelper'
-import { E } from 'app/dist/spa/assets/EspaceInfirmier.c1da79f5'
 
 export default defineComponent({
   name: 'AjouterInterventionComponent',
@@ -181,7 +180,7 @@ export default defineComponent({
 
     watch(() => props.idIntervention, async (newId, oldId) => {
       if (newId > 0) {
-        const interventionData = await chargerIntervention(newId);
+        const interventionData = await chargerIntervention(newId) as Intervention;
         intervention.value = interventionData;
         console.log(intervention.value, 'inter');
       } else {
@@ -210,28 +209,6 @@ export default defineComponent({
         intervention.value = getNouvelleIntervention();
       }
     }, { immediate: true });
-
-    // function getNouvelleIntervention() {
-    //   return {
-    //       id_intervention: 0 as number,
-    //       date_heure: new Date(),
-    //       Patient: {
-    //         id_patient: 0 as number,
-    //         nom: '' as string,
-    //         prenom: '' as string,
-    //         email: '' as string
-    //       },
-    //       Personnel: {
-    //         id_personnel: 0 as number,
-    //         nom: '' as string,
-    //         prenom: '' as string
-    //       },
-    //       EtatIntervention: {
-    //         id_etat: 0 as number,
-    //         libelle: '' as string
-    //       }
-    //   };
-    // }
 
    async function chargerIntervention(id: number) {
         try{
@@ -309,11 +286,11 @@ export default defineComponent({
         let resultat;
         if (intervention.value.id_intervention) {
           // Mise à jour de l'intervention existante
-          resultat = await updateIntervention(intervention.value.id_intervention, interventionData);
+          resultat = await updateIntervention(intervention.value.id_intervention, interventionData) as Intervention;
           emit('intervention-updated', resultat.id_intervention);
         } else {
           // Création d'une nouvelle intervention
-          const createdIntervention = await createIntervention(interventionData, soinsSelectionnes.value.filter(v => v !== null) as number[])
+          const createdIntervention = await createIntervention(interventionData, soinsSelectionnes.value.filter(v => v !== null) as number[]) as Intervention;
           emit('intervention-added', createdIntervention.id_intervention);
         }
         console.log('Intervention ajoutée avec succès:', soinsSelectionnes.value)

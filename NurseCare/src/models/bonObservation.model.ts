@@ -3,5 +3,9 @@ export interface BonObservation {
   note: string;
   commentaire: string;
   id_prestation: number;
-  id_personnel: number;
+  stagiaire: string,
+  OrganismeFormation: {
+    id_OrganismeFormation: number;
+    nom: string;
+  };
 }

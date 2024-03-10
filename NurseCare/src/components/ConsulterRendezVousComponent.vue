@@ -57,12 +57,91 @@
                 <div v-if="props.row.id_intervention">
                   <p>Prestations :</p>
                   <ul>
-                    <li
+                    <div
                       v-for="prestation in prestationsParIntervention[props.row.id_intervention]"
                       :key="prestation.id_prestation"
+                      class="row"
+                      style="margin-bottom: 20px;"
                     >
-                      {{ prestation.Catalogue.libelle }} - {{ prestation.Catalogue.prix }} € - {{ prestation.Catalogue.CategorieCatalogue.libelle }}
-                    </li>
+                      <div class="col">
+                        <li>
+                          {{ prestation.Catalogue.libelle }} - {{ prestation.Catalogue.prix }} € - {{ prestation.Catalogue.CategorieCatalogue.libelle }}
+                        </li>
+                      </div>
+                      <div
+                        class="col-12 col-md-2"
+                        style="margin-bottom: -20px;"
+                      >
+                        <q-btn
+                          color="primary"
+                          size="xs"
+                          round
+                          glossy
+                          style="margin-left: 0px;"
+                          icon="add"
+                          @click="openBonObservationDialog(prestation.id_prestation)"
+                        >
+                          <q-tooltip
+                            anchor="top left"
+                            :offset="[0, 10]"
+                          >
+                            Ajouter un bon d'observation
+                          </q-tooltip>
+                        </q-btn>
+                        <q-dialog v-model="isCreationBonObservation">
+                          <q-card>
+                            <q-card-section>
+                              <div class="text-h6">
+                                Ajouter un bon d'observation
+                              </div>
+                            </q-card-section>
+
+                            <q-card-section>
+                              <q-form @submit="submitBon(prestation.id_prestation)">
+                                <q-input
+                                  v-model="newBonObservation.stagiaire"
+                                  label="Stagiaire"
+                                />
+                                <q-input
+                                  v-model="newBonObservation.note"
+                                  label="Note"
+                                />
+                                <q-input
+                                  v-model="newBonObservation.commentaire"
+                                  label="Commentaire"
+                                />
+
+                                <q-select
+                                  v-model="newBonObservation.OrganismeFormation.id_OrganismeFormation"
+                                  :options="organismesOptions"
+                                  stack-label
+                                  outlined
+                                  label="Organisme de Formation"
+                                  emit-value
+                                  map-options
+                                  option-label="nom"
+                                  option-value="id_OrganismeFormation"
+                                />
+
+                                <div>
+                                  <q-btn
+                                    label="Annuler"
+                                    type="reset"
+                                    color="primary"
+                                    @click="isCreationBonObservation = false"
+                                  />
+                                  <q-btn
+                                    label="Soumettre"
+                                    type="submit"
+                                    color="primary"
+                                  />
+                                </div>
+                              </q-form>
+                            </q-card-section>
+                          </q-card>
+                        </q-dialog>
+                      </div>
+                    </div>
                   </ul>
                 </div>
               </div>
@@ -139,21 +218,6 @@
                     Envoyer la facture par mail
                   </q-tooltip>
                 </q-btn>
-                <q-btn
-                  color="primary"
-                  size="sm"
-                  round
-                  glossy
-                  style="margin-left: 5px; margin-top: 10px;"
-                  icon="add"
-                >
-                  <q-tooltip
-                    anchor="top left"
-                    :offset="[0, 10]"
-                  >
-                    Ajouter un bon d'observation
-                  </q-tooltip>
-                </q-btn>
               </div>
             </div>
           </q-td>
@@ -164,7 +228,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, watch, ref } from 'vue'
+import { defineComponent, reactive, watch, ref, onMounted } from 'vue'
 import { extraireHeureFromISOString } from 'src/helpers/formatHelper'
 import { recupererPrestationsDuneIntervention } from 'src/services/prestationService'
 import { Prestation } from 'src/models/prestation.model'
@@ -172,6 +236,10 @@ import { Intervention } from 'src/models/intervention.model'
 import AjouterInterventionComponent from 'src/components/actions/AjouterInterventionComponent.vue'
 import { deleteIntervention } from 'src/services/interventionService'
 import { jsPDF } from "jspdf";
+import { BonObservation } from 'src/models/bonObservation.model'
+import  createService from 'src/services/baseService'
+import { OrganismeFormation } from 'src/models/organismeformation.model'
+import {createBonObservation} from 'src/services/bonObservationService'
 
 export default defineComponent({
   name: 'ConsulterRendezVousComponent',
@@ -189,6 +257,20 @@ export default defineComponent({
     const catalogue = ref([]);
     const isEditionIntervention = ref(false);
     const isGenererFacture = ref(false);
+    const isCreationBonObservation = ref(false);
+    const newBonObservation = ref<BonObservation>({
+      id_bon: 0,
+      note: '',
+      commentaire: '',
+      id_prestation: 0,
+      stagiaire: '',
+      OrganismeFormation: {
+        id_OrganismeFormation: 0,
+        nom: ''
+      }
+    });
+    const organismesOptions = ref<BonObservation[]>([]);
+    const currentPrestationIdPourBon = ref(0);
 
   const idInterventionAEditer = ref(0);
 
@@ -209,6 +291,24 @@ export default defineComponent({
       }
     });
 
+    function openBonObservationDialog(id_prestation: number) {
+  currentPrestationIdPourBon.value = id_prestation;
+  isCreationBonObservation.value = true;
+}
+
+    onMounted(async () => {
+  try {
+    const objservationOptionData = await createService("/organisme-formation/").getAll() as OrganismeFormation[];
+    organismesOptions.value = objservationOptionData.map((organisme) => ({
+      id_OrganismeFormation: organisme.id_OrganismeFormation,
+      nom: organisme.nom,
+      value: organisme.id_OrganismeFormation,
+    }));
+  } catch (error) {
+    console.error(error);
+  }
+});
+
     function ouvrirDialogueEdition(intervention: Intervention) {
       idInterventionAEditer.value = intervention.id_intervention;
       console.log('interventionAEditer n° : ', idInterventionAEditer.value);
@@ -222,6 +322,27 @@ async function supprimerIntervention(intervention: Intervention) {
     emit('interventionSupprimee');
   } catch (error) {
     console.error('Erreur lors de la suppression de l\'intervention:', error);
+  }
+}
+
+const submitBon = async(id_prestation: number) => {
+  try {
+    console.log('newBonObservation', newBonObservation)
+    const newBonObservationData = {
+      id_bon: 0,
+      note: newBonObservation.value.note,
+      commentaire: newBonObservation.value.commentaire,
+      id_prestation: id_prestation,
+      stagiaire: newBonObservation.value.stagiaire,
+      id_OrganismeFormation: newBonObservation.value.OrganismeFormation.id_OrganismeFormation,
+      OrganismeFormation: newBonObservation.value.OrganismeFormation
+
+    } as BonObservation;
+    console.log('newBonObservationData', newBonObservationData);
+    const response = await createBonObservation(newBonObservationData);
+    console.log('Bon d\'observation ajouté:', response);
+  } catch (error) {
+    console.error('Erreur lors de l\'ajout du bon d\'observation:', error);
   }
 }
 
@@ -258,7 +379,29 @@ console.log(total, 'total')
       window.open(`mailto:${intervention.Patient.email}?subject=${subject}&body=${body}`);
     }
 
-    return { state, isGenererFacture, isEditionIntervention, prestationsParIntervention: state.prestationsParIntervention, supprimerIntervention, ouvrirDialogueEdition, idInterventionAEditer, generatePdf, envoyerEmail };
+    return { state, submitBon, openBonObservationDialog, isGenererFacture, isEditionIntervention, prestationsParIntervention: state.prestationsParIntervention,
+      supprimerIntervention, currentPrestationIdPourBon, ouvrirDialogueEdition, idInterventionAEditer, generatePdf, envoyerEmail, isCreationBonObservation, newBonObservation, organismesOptions };
   }
+    // methods: {
+    //                             async onSubmit(id_prestation: number) {
+    //                               console.log('id_prestation', id_prestation);
+    //                               try {
+    //                                 console.log('newBonObservation', this.newBonObservation)
+    //                                 const newBonObservationData = {
+    //                                   id_bon: 0,
+    //                                   note: this.newBonObservation.note,
+    //                                   commentaire: this.newBonObservation.commentaire,
+    //                                   id_prestation: id_prestation,
+    //                                   stagiaire: this.newBonObservation.stagiaire,
+    //                                  id_organismeFormation: this.newBonObservation.OrganismeFormation.id_OrganismeFormation
+    //                                 };
+    //                                  const response = await createService("/bon-observation/bon-observation").createData(newBonObservationData);
+    //                                 console.log('Bon d\'observation ajouté:', response);
+    //                               } catch (error) {
+    //                                 console.error('Erreur lors de l\'ajout du bon d\'observation:', error);
+    //                             }
+
+    //                           }
+    //                         }
 })
 </script>
