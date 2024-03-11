@@ -80,7 +80,7 @@
     <div class="q-pa-md">
       <q-table
         title="Bons d'observation"
-        :rows="bonObservations.data"
+        :rows="bonObservations"
         row-key="id_bon"
         :columns="[
           { name: 'id_bon', align: 'left', label: 'ID', field: 'id_bon' },
