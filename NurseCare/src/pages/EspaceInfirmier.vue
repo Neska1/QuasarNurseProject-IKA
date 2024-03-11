@@ -123,10 +123,9 @@ export default defineComponent({
   const date = dateSelected.value;
   const startingPoint = '3 Chemin de la Payssiere, 31670 Labège';
   isGeneretationTrajet.value = true;
-
+console.log('date:', date, 'personnelId:', personnelId, 'startingPoint:', startingPoint);
   try {
     // Utiliser la méthode getTrajetOrdonne pour récupérer l'itinéraire ordonné
-    console.log(date, personnelId, startingPoint)
     const orderedRoutes = await getTrajetOrdonne(date, personnelId, startingPoint);
 
     if (orderedRoutes) {

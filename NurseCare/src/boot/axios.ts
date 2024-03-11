@@ -10,7 +10,7 @@ declare module '@vue/runtime-core' {
 }
 
 const api = axios.create({
-  baseURL: 'http://localhost:8082/'
+  baseURL: 'http://localhost:8087/'
 })
 
 export default boot(({ app }) => {

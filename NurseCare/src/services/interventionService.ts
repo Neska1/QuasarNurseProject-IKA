@@ -82,7 +82,11 @@ const deleteIntervention = async (interventionId: number) => {
 
 const getTrajetOrdonne = async (date: string, personnelId: number, startingPoint: string) => {
   try {
-    const response = await api.get(`/intervention/trajet/${date}/${personnelId}/${startingPoint}`);
+    const formattedDate = date.split('/').join('-');
+    const encodedStartingPoint = encodeURIComponent(startingPoint);
+    console.log('date srv:', formattedDate, 'personnelId sev:', personnelId, 'startingPoint sev:', encodedStartingPoint);
+    const response = await api.get(`/intervention/trajet/${formattedDate}/${personnelId}/${encodedStartingPoint}`);
+    console.log(response.data, 'response.data');
     return response.data;
   } catch (error) {
     console.error('Erreur lors du calcul du trajet:', error);
