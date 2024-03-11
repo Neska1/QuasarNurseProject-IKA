@@ -8,7 +8,8 @@ const bonObservations = ref<BonObservation[]>([])
 
 const loadBonObservation = async () => {
   try {
-    const response = await api.get('/bon')
+    const response = await api.get<BonObservation[]>('/bon-observation')
+    console.log('response:', response)
     bonObservations.value = response.data
   } catch (error) {
     console.error('Erreur lors de la récupération du BonObservation:', error)

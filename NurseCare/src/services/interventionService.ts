@@ -92,6 +92,7 @@ const getTrajetOrdonne = async (date: string, personnelId: number, startingPoint
     console.error('Erreur lors du calcul du trajet:', error);
   }
 }
+
 const getInterventionsByEtat = async (etatId: number) => {
   try {
     const response = await api.get<Intervention[]>(`/intervention/etat/${etatId}`);
