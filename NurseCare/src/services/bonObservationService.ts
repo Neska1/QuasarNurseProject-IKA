@@ -25,6 +25,15 @@ const createBonObservation = async (bonData: BonObservation) => {
   }
 }
 
+const getBonObservationsByPrestationId = async (idPrestation: number) => {
+  try {
+    const response = await api.get(`/prestation/${idPrestation}/bon-observation`)
+    return response.data
+  } catch (error) {
+    console.error('Erreur lors de la récupération des bons d\'observations:', error)
+  }
+}
+
 const updateCatalogue = async (patientId: number, patientData: BonObservation) => {
   try {
     const response = await api.put(`/bon-observation/${patientId}`, patientData)
@@ -52,4 +61,4 @@ const chercherElementCatalogueById = async (patientId: number) => {
   }
 }
 
-export { bonObservations as catalogue, updateCatalogue, deleteCatalogue, chercherElementCatalogueById, createBonObservation }
+export { bonObservations, updateCatalogue, deleteCatalogue, chercherElementCatalogueById, createBonObservation, loadBonObservation, getBonObservationsByPrestationId}

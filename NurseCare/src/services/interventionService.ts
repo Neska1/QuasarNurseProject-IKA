@@ -1,17 +1,26 @@
 import { ref } from 'vue'
 import { api } from 'boot/axios'
 import type { Intervention } from '../models/intervention.model'
+import type { Prestation } from '../models/prestation.model'
 
 const intervention = ref<Intervention[]>([])
+const prestationsByIntervention = ref<{ [key: number]: Prestation[] }>({});
+
+type ServerResponse = {
+  interventions: Intervention[];
+  prestationsByIntervention: { [key: number]: Prestation[] };
+};
 
 const loadIntervention = async () => {
   try {
-    const response = await api.get<Intervention[]>('/intervention')
-    intervention.value = response.data
+    const response = await api.get<ServerResponse>('/intervention');
+    console.log('response:', response);
+    intervention.value = response.data.interventions;
+    prestationsByIntervention.value = response.data.prestationsByIntervention;
   } catch (error) {
-    console.error('Erreur lors de la récupération des interventions:', error)
+    console.error('Erreur lors de la récupération des interventions:', error);
   }
-}
+};
 
 const getInterventionsByDateAndPersonnel = async (date: string, personnelId: number) => {
   try {
@@ -71,4 +80,13 @@ const deleteIntervention = async (interventionId: number) => {
   }
 }
 
-export { intervention, loadIntervention, createIntervention, getInterventionById, updateIntervention, deleteIntervention, getInterventionsByDateAndPersonnel as getInterventionsByDateAndPatient }
+const getTrajetOrdonne = async (date: string, personnelId: number, startingPoint: string) => {
+  try {
+    const response = await api.get(`/intervention/trajet/${date}/${personnelId}/${startingPoint}`);
+    return response.data;
+  } catch (error) {
+    console.error('Erreur lors du calcul du trajet:', error);
+  }
+}
+
+export { intervention, getTrajetOrdonne, loadIntervention, createIntervention, getInterventionById, updateIntervention, deleteIntervention, getInterventionsByDateAndPersonnel as getInterventionsByDateAndPatient, prestationsByIntervention }

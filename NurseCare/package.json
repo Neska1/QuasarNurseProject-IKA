@@ -13,9 +13,11 @@
     "build": "quasar build"
   },
   "dependencies": {
+    "@fawmi/vue-google-maps": "^0.9.79",
     "@quasar/extras": "^1.16.4",
     "axios": "^1.2.1",
     "date-fns": "^3.3.1",
+    "gmap": "^1.0.1",
     "intl": "^1.2.5",
     "jspdf": "^2.5.1",
     "pdfmake": "^0.2.10",
@@ -25,7 +27,8 @@
     "vue": "^3.0.0",
     "vue-i18n": "^9.2.2",
     "vue-pdf": "^4.3.0",
-    "vue-router": "^4.0.0"
+    "vue-router": "^4.0.0",
+    "vue2-google-maps": "^0.10.7"
   },
   "devDependencies": {
     "@intlify/vite-plugin-vue-i18n": "^3.3.1",

@@ -28,12 +28,40 @@
       </div>
     </div>
   </q-page>
+  <div
+    padding
+    center
+  >
+    <q-dialog v-model="isGeneretationTrajet">
+      <q-spinner-dots
+        v-if="isLoading"
+        color="white"
+        size="1em"
+      />
+      <q-card>
+        <q-card-section class="row">
+          <div
+            v-for="(orderedAddresses, index) in trajet"
+            :key="index"
+          >
+            {{ index + 1 }}. {{ orderedAddresses }} <br>
+          </div>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
+
+    <q-btn @click="genererTrajetDuJour">
+      <q-icon name="map" />
+      Générer trajet du jour
+    </q-btn>
+  </div>
 </template>
+
 
 <script lang="ts">
 import { defineComponent, ref, watch, provide, computed } from 'vue'
 import ConsulterRendezVousComponent from '../components/ConsulterRendezVousComponent.vue'
-import { getInterventionsByDateAndPatient } from 'src/services/interventionService'
+import { getInterventionsByDateAndPatient, getTrajetOrdonne } from 'src/services/interventionService'
 import { Intervention } from 'src/models/intervention.model'
 import { DateTimeOptions } from 'vue-i18n'
 import { premiereLettreUpperCase } from 'src/helpers/formatHelper'
@@ -52,6 +80,9 @@ export default defineComponent({
     const interventionsDuJour = ref([] as Intervention[])
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
     const prestationsParIntervention = ref({} as { [key: number]: Prestation[] })
+    const isGeneretationTrajet = ref(false)
+    const trajet = ref([] as string[])
+    const isLoading = ref(false);
 
     const dateDuJour = computed(() => {
       const dateDuJourToString = new Date(dateSelected.value).toLocaleDateString('fr-FR', options as DateTimeOptions)
@@ -86,6 +117,33 @@ export default defineComponent({
       }
     }
 
+    const genererTrajetDuJour = async () => {
+       isLoading.value = true;
+  const personnelId = 1;
+  const date = dateSelected.value;
+  const startingPoint = '3 Chemin de la Payssiere, 31670 Labège';
+  isGeneretationTrajet.value = true;
+
+  try {
+    // Utiliser la méthode getTrajetOrdonne pour récupérer l'itinéraire ordonné
+    console.log(date, personnelId, startingPoint)
+    const orderedRoutes = await getTrajetOrdonne(date, personnelId, startingPoint);
+
+    if (orderedRoutes) {
+      console.log(orderedRoutes);
+      // Mettre à jour le trajet réactif pour l'afficher dans l'interface utilisateur
+      trajet.value = orderedRoutes.orderedAddresses;
+    } else {
+      console.error('Aucun itinéraire ordonné reçu');
+    }
+  } catch (error) {
+    console.error('Erreur lors du calcul du trajet:', error);
+  }
+  finally {
+    isLoading.value = false;
+  }
+};
+
     provide('interventionsDuJourSelected', interventionsDuJour)
 
     watch(dateSelected, chargerInterventionsDuJour, { immediate: true })
@@ -95,7 +153,11 @@ export default defineComponent({
       dateSelected,
       interventionsDuJour,
       dateDuJour,
-      chargerInterventionsDuJour
+      chargerInterventionsDuJour,
+      isGeneretationTrajet,
+      genererTrajetDuJour,
+      trajet,
+      isLoading
     }
   }
 })

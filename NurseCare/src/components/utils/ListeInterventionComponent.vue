@@ -50,7 +50,17 @@
           >
             <q-td colspan="100%">
               <div class="text-left">
-                This is expand slot for row above: {{ props.row.Patient.nom }}.
+                <p>Détails des prestations :</p>
+                <ul>
+                  <li
+                    v-for="prestation in prestationsByIntervention[props.row.id_intervention]"
+                    :key="prestation.id_prestation"
+                    class="row"
+                    style="margin-bottom: 20px;"
+                  >
+                    {{ prestation.Catalogue.CategorieCatalogue.libelle }}  : {{ prestation.Catalogue.libelle }}- {{ prestation.Catalogue.prix }} €
+                  </li>
+                </ul>
               </div>
             </q-td>
           </q-tr>
@@ -62,8 +72,9 @@
 
 <script lang="ts">
 import { defineComponent, onMounted } from 'vue'
-import { intervention, loadIntervention } from 'src/services/interventionService'
+import { intervention, prestationsByIntervention, loadIntervention } from 'src/services/interventionService'
 import { QTableColumn } from 'quasar'
+import { getBonObservationsByPrestationId } from 'src/services/bonObservationService'
 
 export default defineComponent({
   name: 'ListeInterventionComponent',
@@ -80,6 +91,7 @@ export default defineComponent({
 
     return {
       intervention,
+      prestationsByIntervention,
       columns
     }
   }
