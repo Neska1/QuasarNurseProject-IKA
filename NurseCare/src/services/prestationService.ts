@@ -15,6 +15,14 @@ async function recupererPrestationsDuneIntervention (idIntervention: number) {
   }
 }
 
+async function rechercherPrestationsParCatalogue(idCatalogue: number) {
+  try {
+    const prestations = await api.get<Prestation[]>(`${PRESTATION_ENDPOINT}/catalogue/${idCatalogue}`);
+    return prestations.data;
+  } catch (error) {
+    console.error('Error fetching prestations:', error);
+    throw error;
+  }
+}
 
-
-export { prestationService, recupererPrestationsDuneIntervention }
+export { prestationService, recupererPrestationsDuneIntervention, rechercherPrestationsParCatalogue}

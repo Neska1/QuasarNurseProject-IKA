@@ -44,7 +44,7 @@
             v-for="(orderedAddresses, index) in trajet"
             :key="index"
           >
-            {{ index + 1 }}. {{ orderedAddresses }} <br>
+            <span><strong>{{ index === 0 ? 'Départ :' : index + ') ' }}</strong> {{ orderedAddresses }}&nbsp;<br></span>
           </div>
         </q-card-section>
       </q-card>
@@ -122,16 +122,16 @@ export default defineComponent({
   const personnelId = 1;
   const date = dateSelected.value;
   const startingPoint = '3 Chemin de la Payssiere, 31670 Labège';
+
   isGeneretationTrajet.value = true;
 console.log('date:', date, 'personnelId:', personnelId, 'startingPoint:', startingPoint);
   try {
-    // Utiliser la méthode getTrajetOrdonne pour récupérer l'itinéraire ordonné
     const orderedRoutes = await getTrajetOrdonne(date, personnelId, startingPoint);
 
     if (orderedRoutes) {
       console.log(orderedRoutes);
-      // Mettre à jour le trajet réactif pour l'afficher dans l'interface utilisateur
       trajet.value = orderedRoutes.orderedAddresses;
+      console.log(trajet.value, 'trajet:', trajet);
     } else {
       console.error('Aucun itinéraire ordonné reçu');
     }

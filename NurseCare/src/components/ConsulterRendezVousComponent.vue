@@ -70,7 +70,18 @@
                         <li>
                           {{ prestation.Catalogue.libelle }} - {{ prestation.Catalogue.prix }} € - {{ prestation.Catalogue.CategorieCatalogue.libelle }}
                         </li>
+                        <div
+                          v-for="bon in bonsByPrestation[prestation.id_prestation]"
+                          :key="bon.id_bon"
+                        >
+                          <p style="margin-top: 20px;">
+                            <strong>   Bon d'observation :</strong>
+                          </p>
+                          {{ console.log(bon) }}
+                          <u>Stagiaire :</u>&nbsp;&nbsp;{{ bon.stagiaire }}&nbsp; - <u>Note :</u>&nbsp;&nbsp;{{ bon.note }}/5 - <u>Commentaire:</u>&nbsp;&nbsp;{{ bon.commentaire }}
+                        </div>
                       </div>
+
                       <p style="margin-right: -20px;">
                         Ajouter un bon :
                       </p>
@@ -191,7 +202,6 @@
                         :is-disabled="false"
                       />
                     </q-dialog>
-
                     <q-btn
                       size="sm"
                       color="accent"
@@ -277,7 +287,7 @@ import { jsPDF } from "jspdf";
 import { BonObservation } from 'src/models/bonObservation.model'
 import  createService from 'src/services/baseService'
 import { OrganismeFormation } from 'src/models/organismeformation.model'
-import {createBonObservation} from 'src/services/bonObservationService'
+import {createBonObservation, getBonObservationsByPrestationId } from 'src/services/bonObservationService'
 
 export default defineComponent({
   name: 'ConsulterRendezVousComponent',
@@ -312,6 +322,7 @@ export default defineComponent({
     const googleMapsPath = "ypciG}wyGOGc@@aCiEc@l@Sb@AFsD|DcDfDMD}@t@kAlA[d@u@p@IXqDrDw@`A_B|C_@rAS`Aa@tCqArKYnBO`BGJM@e@X{FnAgFlA}E~@{@FYDj@vEB`@^dCLbA`@jBp@pBfAtBrA`Cx@bBfArCfAjDz@dD`AlGxBjPJdAKLeAPD|@~Cd^@bAV`E@~@Ep@QXe@VWDaA?g@A]JSNU^Kn@A\\Df@Ld@X`@\\V`C`AdAv@b@d@VDhBzC`ArB~AlEzSvm@d@fAlClH?`@xA|DATd@dBBVGl@M^QRc@R[Fg@E]WYYGGCWMOQBKP@V@Ds@tBq@~AiAvDsDrKMEUFMTCPwDFe@FK@IF?PJVCHYTGNCZ@V@hAh@ORs@Hi@Dw@@o@nDIN@@NNRDBBCDDNA?EF?HK?ElDjCFLF^GZ@\\LVRLXARWb@Eb@@hDhCZPZh@Fp@IZKl@QRYHOCUQQe@Go@Bm@XsB?c@^{Bv@kEv@gFNa@b@mCRk@^i@f@_@b@Kn@?h@Nj@`@~@`Ab@XnAbAhBvA`DpBpClAnC~@lB`@lCZ~CNpCCrAKrDe@`Ck@bEqAfNaFnFuB~DcBfEuBbGeDTDtDaBf@E`@D^TXb@l@xBJp@IlAAd@D^X|@Z`@fAX\\?VUVo@?q@Gi@Bg@JMFEpBDzGl@lCX^N\\X\\f@Vf@Jl@Fj@GtEI`AMBEPFNJBHK^v@Ph@]aAS_@?SKIKDEP@Bs@b@aBjAo@HsEyCs@u@_AsAY[uAiCOk@AaA?q@Gi@Oe@a@i@ES{@}@a@s@YgAKw@?e@Jo@N]X[~DwCd@WFWlKaG\\MhGmDhIwE`T{KfN_IpDkCpDyCfAqA~AeC`AwBv@gCz@eD`@wBb@wDP_DDyCC{DSgDa@gDi@yDCg@wB_Ny@uF_@oEgB_Z{@cOUsB[}As@yBy@cBqAqB_AoAmK}OyDcGi@mAe@_BYcBMuBA}ALqBViBr@yCpNuh@n@wC`@aC\\}DPgFv@sc@?yBKyBWyCe@aCaAqC_AmBuB{Ds@mB]}Ae@gCKkBAuBFuBRoB\\iBn@qB|@uBbSca@dAmBtHcOhCyEpCqEtCeEfIsKZEbBqB|GsIrAsA`Aq@jAk@rAe@RMtG}B|IkCrAa@~Bc@pCUj@Or@_@h@g@d@u@b@eATuAHmACqAMiA]sBIkAAy@J_BToAXw@d@}@l@q@t@g@z@YfDm@ZQh@OxFoBt@[~Ay@HQxC_C|DqDZe@Jk@?WEYiEgJ@U?ALS?GzDiEl@m@Ws@S[EMDoBCOKMM_@UMLa@DCdAPeAQEBM`@TLL^JNBLEnBDLRZVr@{B|BmBxBWHOCMJCVFPPDB?tChGVbA?^K^KPeCfCeDnDsBfBqAl@qEvAeBb@eAJaBBiFQeABmB^sCx@s@^WFuGzE{@h@oCnA_Cr@kCf@wCTiQj@SJ{HJ{GEgFSoFc@mDk@qBe@uE}AyDeBgFsCmI}EeCmAeC{@iCk@oC[gCImCDkCTmCf@mF~A}^`MoHvBcGnAsEt@{Fn@mNjAaCZgCn@oBv@}BdA}B~AyBlBkBvBcB~BsBrD_CjEuAvBoB`CsBlBeCdBeD~AoBp@gCf@qBTmCHgLAoENeDV_Dd@_NrCom@xMwGfBcSbGsEfA{Ev@yFl@cVzAoHp@wFdA}Ct@wDpAsCrAsCxAcDzBgCxBwCxCkCbDkC~DyB`EaClFgB~E}AnF}@tDaAhFs@fFm@lG_@tGWdIOfM?xKJ~STbV?~IM~GSpFGjAKNo@fIUpBe@xBkBpGStACl@{@NIF}@H_HjAuBZ_AJYAMBMOK_@GOLOXE[FKLFNAb@IRBXFFPAFKBKVIJG~@KxF}@pDm@f@EJ@`CK|E]tBUzJHtGNF@fD?bNQzJ?TClBLTZBNBVJJNAHG`ADlF|B~@Lf@C|@[`CmAz@KhQrClLbB~ARzHh@BYxAcJxD_WxDf@hB`@jCp@pC`AzH~B\\DwDrL_AnGIh@K~AuENt@hL~IwD~LuCp@S|Co@bCk@zCi@n@S^WtIgBxG{ApAYt@BLJPAHSAWIMPmEpAsK`@uCj@eCL[`B{Cn@w@pDsDRCBCfBoBvA{AV]BIbIoIRUPEPQvBlDGd@@ZNb@Zd@TNX?VKHIL]@g@CWMa@a@e@"
 
     const idInterventionAEditer = ref(0);
+    const bonsByPrestation = {} as { [key: number]: BonObservation[] };
 
     const state = reactive({
       prestationsParIntervention: {} as { [key: number]: Prestation[] },
@@ -327,6 +338,10 @@ export default defineComponent({
         const response = await recupererPrestationsDuneIntervention((intervention as Intervention).id_intervention as number);
         const prestations = response;
         state.prestationsParIntervention[(intervention as Intervention).id_intervention] = prestations;
+        for (const prestation of prestations) {
+        const bons = await getBonObservationsByPrestationId(prestation.id_prestation) as BonObservation[];
+        bonsByPrestation[prestation.id_prestation] = bons || [];
+      }
       }
     });
 
@@ -343,6 +358,7 @@ export default defineComponent({
           nom: organisme.nom,
           value: organisme.id_OrganismeFormation,
         }));
+
       } catch (error) {
         console.error(error);
       }
@@ -401,7 +417,7 @@ if (prestations && prestations.length > 0) {
   prestations.forEach((prestation) => {
     doc.text(`${prestation.Catalogue.libelle} - ${prestation.Catalogue.prix} €`, 10, currentY);
     currentY += 10;
-    total = total + prestation.Catalogue.prix;
+    total = (total * 1) + (prestation.Catalogue.prix* 1) ;
   });
 console.log(total, 'total')
   doc.text(`Total : ${total} €`, 10, currentY);
@@ -419,7 +435,7 @@ console.log(total, 'total')
     }
 
     return { state, submitBon, googleMapsPath, openBonObservationDialog, isGenererFacture, isEditionIntervention, prestationsParIntervention: state.prestationsParIntervention,
-      supprimerIntervention, currentPrestationIdPourBon, ouvrirDialogueEdition, idInterventionAEditer, generatePdf, envoyerEmail, isCreationBonObservation, newBonObservation, organismesOptions };
+      supprimerIntervention, currentPrestationIdPourBon, ouvrirDialogueEdition, idInterventionAEditer, generatePdf, envoyerEmail, isCreationBonObservation, newBonObservation, organismesOptions, bonsByPrestation };
   }
 })
 </script>

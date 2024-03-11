@@ -27,7 +27,8 @@ const createBonObservation = async (bonData: BonObservation) => {
 
 const getBonObservationsByPrestationId = async (idPrestation: number) => {
   try {
-    const response = await api.get(`/prestation/${idPrestation}/bon-observation`)
+    const response = await api.get<BonObservation[]>(`/bon-observation/prestation/${idPrestation}/bon-observation`)
+    console.log('response bon:', response.data)
     return response.data
   } catch (error) {
     console.error('Erreur lors de la récupération des bons d\'observations:', error)

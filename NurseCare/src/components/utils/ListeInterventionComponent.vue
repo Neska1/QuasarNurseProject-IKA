@@ -74,7 +74,6 @@
 import { defineComponent, onMounted } from 'vue'
 import { intervention, prestationsByIntervention, loadIntervention } from 'src/services/interventionService'
 import { QTableColumn } from 'quasar'
-import { getBonObservationsByPrestationId } from 'src/services/bonObservationService'
 
 export default defineComponent({
   name: 'ListeInterventionComponent',
